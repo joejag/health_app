@@ -1,0 +1,2 @@
+(this.webpackJsonphealth_app=this.webpackJsonphealth_app||[]).push([[0],{11:function(e,t,n){"use strict";n.r(t);var c=n(1),r=n.n(c),a=n(3),i=n.n(a),h=(n(8),n(9),n(0));var o=function(){return Object(h.jsx)("main",{children:Object(h.jsx)("h2",{children:"The great chocolate bar timeline"})})};i.a.render(Object(h.jsx)(r.a.StrictMode,{children:Object(h.jsx)(o,{})}),document.getElementById("root"))},8:function(e,t,n){},9:function(e,t,n){}},[[11,1,2]]]);
+//# sourceMappingURL=main.5851fe0d.chunk.js.map
