@@ -1,6 +1,6 @@
 {
-  "name": "chocolate_birthday",
-  "homepage": "http://chocolate.joejag.com/",
+  "name": "health_app",
+  "homepage": "https://health.joejag.com/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
