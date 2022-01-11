@@ -1,5 +1,5 @@
 # Chocolate Bars
 
-https://joejag.github.io/chocolate_birthday/
+https://health.joejag.com
 
 `npm run deploy`
