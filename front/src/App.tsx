@@ -31,6 +31,9 @@ const decorate = (input: HealthResult[]): DecoratedHealthResult[] => {
     if (i !== 0) {
       const previous = input[i - 1]
       weightColor = day.totalWeight > previous.totalWeight ? 'red' : 'green'
+      if (day.totalWeight > previous.totalWeight && day.fat <= previous.fat) {
+        weightColor = 'yellow'
+      }
       leanColor = day.lean < previous.lean ? 'red' : 'green'
       fatColor = day.fat > previous.fat ? 'red' : 'green'
     }
@@ -48,10 +51,9 @@ const decorate = (input: HealthResult[]): DecoratedHealthResult[] => {
 }
 
 function App() {
+  // const items: DecoratedHealthResult[] = decorate(RESULT).reverse()
+
   const [items, setItems] = React.useState<DecoratedHealthResult[]>([])
-
-  // const items2: DecoratedHealthResult[] = decorate(RESULT)
-
   React.useEffect(() => {
     fetch(
       'https://mysplmqrfc.execute-api.eu-west-2.amazonaws.com/serverless_lambda_stage/hello'
@@ -183,5 +185,14 @@ export const RESULT = [
     fat: 34.1,
     lean: 60.6,
     totalWeight: 94.7,
+  },
+  {
+    ate: '1739',
+    date: '2022-01-12',
+    diff: -188,
+    exercise: '1927',
+    fat: 34.2,
+    lean: 60.8,
+    totalWeight: 94.8,
   },
 ] as HealthResult[]
