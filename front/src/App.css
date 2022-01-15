@@ -15,6 +15,10 @@ body {
   color: green;
 }
 
+#main {
+  margin-bottom: 4em;
+}
+
 table {
   border-collapse: collapse;
   margin: 25px 0;
