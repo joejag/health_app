@@ -100,12 +100,19 @@ function App() {
   return (
     <main>
       {items.length > 0 && (
-        <h3>
-          {items[items.length - 1].fat}kg |{' '}
-          <span className="green">{differenceLost}kg</span> | {items[0].fat}kg |{' '}
-          <span className="red">{differenceToGo}kg</span> | {DESIRED_WEIGHT}kg
-          <br />
-          Days gone: {dGone}, remaining: {dRemain}
+        <>
+          <h3>
+            {items[items.length - 1].fat}kg |{' '}
+            <span className="green">{differenceLost}kg</span> |{' '}
+            <span className={`fat`}>{items[0].fat}kg</span> |{' '}
+            <span className="red">{differenceToGo}kg</span> | {DESIRED_WEIGHT}
+            kg
+          </h3>
+          <p>
+            <em>
+              Days gone: {dGone}, remaining: {dRemain}
+            </em>
+          </p>
           <div className="progress-container">
             <div className="progress-bar">
               <span
@@ -114,7 +121,7 @@ function App() {
               ></span>
             </div>
           </div>
-        </h3>
+        </>
       )}
       <table>
         <thead>
