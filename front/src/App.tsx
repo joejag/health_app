@@ -103,24 +103,35 @@ function App() {
         <thead>
           <tr>
             <th>Date</th>
-            <th>Weight</th>
-            <th>Lean</th>
-            <th>Fat</th>
-            <th>Exercise</th>
-            <th>Ate</th>
-            <th>Diff</th>
+            <th>
+              Weight
+              <br />
+              (Fat + Lean)
+            </th>
+            <th>
+              Calories
+              <br />
+              (Exercise - Ate)
+            </th>
           </tr>
         </thead>
         <tbody>
           {items.map((result: DecoratedHealthResult) => (
             <tr key={result.date}>
               <td>{result.date}</td>
-              <td className={result.weightColor}>{result.totalWeight}</td>
-              <td className={result.leanColor}>{result.lean}</td>
-              <td className={result.fatColor}>{result.fat}</td>
-              <td>{result.exercise}</td>
-              <td>{result.ate}</td>
-              <td className={result.diffColor}>{result.diff}</td>
+              <td>
+                <span className={result.weightColor}>{result.totalWeight}</span>
+                <br />
+                <span className={`fat ${result.fatColor}`}>
+                  {result.fat}
+                </span> +{' '}
+                <span className={result.leanColor}>{result.lean}</span>
+              </td>
+              <td>
+                <span className={result.diffColor}>{result.diff}</span>
+                <br />
+                {result.exercise} - {result.ate}
+              </td>
             </tr>
           ))}
         </tbody>

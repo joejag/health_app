@@ -3,6 +3,10 @@ body {
   justify-content: center;
 }
 
+.fat {
+  font-size: 1.25em;
+}
+
 .red {
   color: red;
 }
@@ -37,6 +41,7 @@ thead tr {
 th,
 td {
   padding: 12px 15px;
+  text-align: center;
 }
 
 tbody tr {
