@@ -69,20 +69,34 @@ function App() {
       )
   }, [])
 
-  const difference =
+  const differenceLost =
     items.length > 0
       ? Math.round((items[0].fat - items[items.length - 1].fat) * 100) / 100
       : 0
+
+  const differenceToGo =
+    items.length > 0 ? Math.round((items[0].fat - 19) * 100) / 100 : 0
+
+  const dGone = Math.ceil(
+    (new Date().getTime() - new Date('01/03/2022').getTime()) /
+      (1000 * 3600 * 24)
+  )
+  const dRemain = Math.ceil(
+    (new Date('04/26/2022').getTime() - new Date().getTime()) /
+      (1000 * 3600 * 24)
+  )
 
   return (
     <main>
       {items.length > 0 && (
         <h3>
           Current: {items[0].fat}kg from {items[items.length - 1].fat}kg (
-          <span className="green">{difference}kg</span>
+          <span className="green">{differenceLost}kg</span>
           )
           <br />
-          Target: 19kg
+          Target: 19kg (<span className="red">{differenceToGo}kg</span>)
+          <br />
+          Days gone: {dGone}, remaining: {dRemain}
         </h3>
       )}
       <table>
