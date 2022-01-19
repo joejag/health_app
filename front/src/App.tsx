@@ -69,9 +69,22 @@ function App() {
       )
   }, [])
 
+  const difference =
+    items.length > 0
+      ? Math.round((items[0].fat - items[items.length - 1].fat) * 100) / 100
+      : 0
+
   return (
     <main>
-      <h2>Health this period</h2>
+      {items.length > 0 && (
+        <h3>
+          Current: {items[0].fat}kg from {items[items.length - 1].fat}kg (
+          <span className="green">{difference}kg</span>
+          )
+          <br />
+          Target: 19kg
+        </h3>
+      )}
       <table>
         <thead>
           <tr>
@@ -98,6 +111,15 @@ function App() {
           ))}
         </tbody>
       </table>
+      <p>
+        Ben More: 19kg
+        <br />
+        West Highland Way: 21kg
+        <br />
+        Ben An: 24kg
+        <br />
+        South Glen Sheil Ridge: 27kg
+      </p>
     </main>
   )
 }

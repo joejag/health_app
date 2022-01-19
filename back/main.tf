@@ -24,10 +24,10 @@ provider "aws" {
 # LAMBDA
 
 module "python_lambda_archive" {
-    source = "rojopolis/lambda-python-archive/aws"
+  source = "rojopolis/lambda-python-archive/aws"
 
-    src_dir              = "${path.module}/src"
-    output_path          = "${path.module}/lambda.zip"
+  src_dir     = "${path.module}/src"
+  output_path = "${path.module}/lambda.zip"
 }
 
 resource "aws_lambda_function" "hello_world" {
@@ -38,8 +38,8 @@ resource "aws_lambda_function" "hello_world" {
 
   role = aws_iam_role.lambda_exec.arn
 
-  filename         = "${module.python_lambda_archive.archive_path}"
-  source_code_hash = "${module.python_lambda_archive.source_code_hash}"
+  filename         = module.python_lambda_archive.archive_path
+  source_code_hash = module.python_lambda_archive.source_code_hash
 }
 
 resource "aws_iam_role" "lambda_exec" {
@@ -61,24 +61,24 @@ resource "aws_iam_role" "lambda_exec" {
 }
 
 resource "aws_iam_role_policy" "lambda_policy" {
-  role       = aws_iam_role.lambda_exec.name
-  policy = jsonencode({  
-  "Version": "2012-10-17",
-  "Statement":[{
-    "Effect": "Allow",
-    "Action": [
-     "dynamodb:BatchGetItem",
-     "dynamodb:GetItem",
-     "dynamodb:Query",
-     "dynamodb:Scan",
-     "dynamodb:BatchWriteItem",
-     "dynamodb:PutItem",
-     "dynamodb:UpdateItem"
-    ],
-    "Resource": "arn:aws:dynamodb:eu-west-2:140551133576:table/weight"
-   }
-  ]
-})
+  role = aws_iam_role.lambda_exec.name
+  policy = jsonencode({
+    "Version" : "2012-10-17",
+    "Statement" : [{
+      "Effect" : "Allow",
+      "Action" : [
+        "dynamodb:BatchGetItem",
+        "dynamodb:GetItem",
+        "dynamodb:Query",
+        "dynamodb:Scan",
+        "dynamodb:BatchWriteItem",
+        "dynamodb:PutItem",
+        "dynamodb:UpdateItem"
+      ],
+      "Resource" : "arn:aws:dynamodb:eu-west-2:140551133576:table/weight"
+      }
+    ]
+  })
 }
 
 resource "aws_cloudwatch_log_group" "hello_world" {
@@ -90,9 +90,9 @@ resource "aws_cloudwatch_log_group" "hello_world" {
 # DYNAMODB
 
 resource "aws_dynamodb_table" "weight" {
-  name             = "weight"
-  hash_key         = "id"
-  billing_mode   = "PAY_PER_REQUEST"
+  name         = "weight"
+  hash_key     = "id"
+  billing_mode = "PAY_PER_REQUEST"
   attribute {
     name = "id"
     type = "S"
