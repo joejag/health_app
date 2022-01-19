@@ -18,6 +18,8 @@ interface DecoratedHealthResult extends HealthResult {
   diffColor: string
 }
 
+const DESIRED_WEIGHT = 19
+
 const decorate = (input: HealthResult[]): DecoratedHealthResult[] => {
   const result: DecoratedHealthResult[] = []
   for (let i = 0; i < input.length; i++) {
@@ -75,7 +77,9 @@ function App() {
       : 0
 
   const differenceToGo =
-    items.length > 0 ? Math.round((items[0].fat - 19) * 100) / 100 : 0
+    items.length > 0
+      ? Math.round((items[0].fat - DESIRED_WEIGHT) * 100) / 100
+      : 0
 
   const dGone = Math.ceil(
     (new Date().getTime() - new Date('01/03/2022').getTime()) /
@@ -86,17 +90,30 @@ function App() {
       (1000 * 3600 * 24)
   )
 
+  const progress =
+    items.length > 0
+      ? Math.abs(
+          differenceLost / (items[items.length - 1].fat - DESIRED_WEIGHT)
+        ) * 100
+      : 0
+
   return (
     <main>
       {items.length > 0 && (
         <h3>
-          Current: {items[0].fat}kg from {items[items.length - 1].fat}kg (
-          <span className="green">{differenceLost}kg</span>
-          )
-          <br />
-          Target: 19kg (<span className="red">{differenceToGo}kg</span>)
+          {items[items.length - 1].fat}kg |{' '}
+          <span className="green">{differenceLost}kg</span> | {items[0].fat}kg |{' '}
+          <span className="red">{differenceToGo}kg</span> | {DESIRED_WEIGHT}kg
           <br />
           Days gone: {dGone}, remaining: {dRemain}
+          <div className="progress-container">
+            <div className="progress-bar">
+              <span
+                className="progress-bar-fill"
+                style={{ width: `${progress}%` }}
+              ></span>
+            </div>
+          </div>
         </h3>
       )}
       <table>
