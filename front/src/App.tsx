@@ -163,11 +163,11 @@ function App() {
       <p>
         Ben More: 19kg
         <br />
-        West Highland Way: 21kg
+        West Highland Way / Beinn Eighe: 21kg
         <br />
         Ben An: 24kg
         <br />
-        South Glen Sheil Ridge: 27kg
+        South Glen Sheil Ridge / Ben Lui: 27kg
       </p>
     </main>
   )
