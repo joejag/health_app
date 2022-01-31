@@ -16,17 +16,9 @@ def hello(token):
     )
 
 def lambda_handler(event, context):
-    table = dynamodb.Table('weight')
-    response = table.get_item(Key={'id': 'joe'})
-    creds = json.loads(response['Item']['creds'])
-    client = fitbit.Fitbit(client_id="22BJQW",
-                                      client_secret="516c12387e20ea5f5d2516d06a44bdd8",
-                                      refresh_token=creds['refresh_token'],
-                                      access_token=creds['access_token'],
-                                      refresh_cb=hello)
-    client.client.refresh_token()
-
-    response = fetch(client)
+    client = login_to_fitbit()
+    d_from = datetime.datetime.strptime('2022-01-30', "%Y-%m-%d")
+    response = fetch(client, d_from)
 
     return {
         'statusCode': 200,
@@ -38,6 +30,18 @@ def lambda_handler(event, context):
         },
         'body': json.dumps(response)
     }
+
+def login_to_fitbit():
+    table = dynamodb.Table('weight')
+    response = table.get_item(Key={'id': 'joe'})
+    creds = json.loads(response['Item']['creds'])
+    client = fitbit.Fitbit(client_id="22BJQW",
+                                      client_secret="516c12387e20ea5f5d2516d06a44bdd8",
+                                      refresh_token=creds['refresh_token'],
+                                      access_token=creds['access_token'],
+                                      refresh_cb=hello)
+    client.client.refresh_token()
+    return client
 
 def lbs_to_kgs(lbs):
     return lbs * 0.453592
@@ -86,9 +90,7 @@ def fetch_exercise(client, d_from, d_to):
         count.append(item)
     return count
 
-def fetch(client):
-    d = '2022-01-03'
-    d_from = datetime.datetime.strptime(d, "%Y-%m-%d")
+def fetch(client, d_from):
     d_to = d_from + datetime.timedelta(days=4 * 7 - 1)
     if d_to > datetime.datetime.now():
         d_to = datetime.datetime.now()

@@ -18,7 +18,7 @@ interface DecoratedHealthResult extends HealthResult {
   diffColor: string
 }
 
-const DESIRED_WEIGHT = 19
+const DESIRED_WEIGHT = 26.4
 
 const decorate = (input: HealthResult[]): DecoratedHealthResult[] => {
   const result: DecoratedHealthResult[] = []
@@ -81,10 +81,6 @@ function App() {
       ? Math.round((items[0].fat - DESIRED_WEIGHT) * 100) / 100
       : 0
 
-  const dGone = Math.ceil(
-    (new Date().getTime() - new Date('01/03/2022').getTime()) /
-      (1000 * 3600 * 24)
-  )
   const dRemain = Math.ceil(
     (new Date('04/26/2022').getTime() - new Date().getTime()) /
       (1000 * 3600 * 24)
@@ -109,9 +105,7 @@ function App() {
             kg
           </h3>
           <p>
-            <em>
-              Days gone: {dGone}, remaining: {dRemain}
-            </em>
+            <em>Days remaining to 19kg goal: {dRemain}</em>
           </p>
           <div className="progress-container">
             <div className="progress-bar">
