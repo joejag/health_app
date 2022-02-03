@@ -13,7 +13,6 @@ export interface HealthResult {
 
 interface DecoratedHealthResult extends HealthResult {
   weightColor: string
-  leanColor: string
   fatColor: string
   diffColor: string
 }
@@ -26,7 +25,6 @@ const decorate = (input: HealthResult[]): DecoratedHealthResult[] => {
     const day = input[i]
 
     let weightColor = 'yellow'
-    let leanColor = 'yellow'
     let fatColor = 'yellow'
     const diffColor = day.diff > 0 ? 'red' : 'green'
 
@@ -36,13 +34,11 @@ const decorate = (input: HealthResult[]): DecoratedHealthResult[] => {
       if (day.totalWeight > previous.totalWeight && day.fat <= previous.fat) {
         weightColor = 'yellow'
       }
-      leanColor = day.lean < previous.lean ? 'red' : 'green'
       fatColor = day.fat > previous.fat ? 'red' : 'green'
     }
 
     result.push({
       weightColor,
-      leanColor,
       fatColor,
       diffColor,
       ...day,
@@ -105,7 +101,7 @@ function App() {
             kg
           </h3>
           <p>
-            <em>Days remaining to 19kg goal: {dRemain}</em>
+            <em>{dRemain} days remaining to 19kg goal</em>
           </p>
           <div className="progress-container">
             <div className="progress-bar">
@@ -142,8 +138,7 @@ function App() {
                 <br />
                 <span className={`fat ${result.fatColor}`}>
                   {result.fat}
-                </span> +{' '}
-                <span className={result.leanColor}>{result.lean}</span>
+                </span> + <span>{result.lean}</span>
               </td>
               <td>
                 <span className={result.diffColor}>{result.diff}</span>
