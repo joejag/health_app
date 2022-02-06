@@ -84,9 +84,11 @@ function App() {
 
   const progress =
     items.length > 0
-      ? Math.abs(
-          differenceLost / (items[items.length - 1].fat - DESIRED_WEIGHT)
-        ) * 100
+      ? Math.round(
+          Math.abs(
+            differenceLost / (items[items.length - 1].fat - DESIRED_WEIGHT)
+          ) * 100
+        )
       : 0
 
   return (
@@ -103,12 +105,13 @@ function App() {
           <p>
             <em>{dRemain} days remaining to 19kg goal</em>
           </p>
-          <div className="progress-container">
+          <div className="progress-container tooltip">
             <div className="progress-bar">
               <span
-                className="progress-bar-fill"
+                className="progress-bar-fill "
                 style={{ width: `${progress}%` }}
               ></span>
+              <span className="tooltiptext">{progress}%</span>
             </div>
           </div>
         </>
