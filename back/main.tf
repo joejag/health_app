@@ -30,8 +30,8 @@ module "python_lambda_archive" {
   output_path = "${path.module}/lambda.zip"
 }
 
-resource "aws_lambda_function" "hello_world" {
-  function_name = "HelloWorld"
+resource "aws_lambda_function" "weight_app" {
+  function_name = "WeightApp"
 
   runtime = "python3.8"
   handler = "hello.lambda_handler"
@@ -81,8 +81,8 @@ resource "aws_iam_role_policy" "lambda_policy" {
   })
 }
 
-resource "aws_cloudwatch_log_group" "hello_world" {
-  name = "/aws/lambda/${aws_lambda_function.hello_world.function_name}"
+resource "aws_cloudwatch_log_group" "weight_app" {
+  name = "/aws/lambda/${aws_lambda_function.weight_app.function_name}"
 
   retention_in_days = 30
 }
@@ -131,19 +131,19 @@ resource "aws_apigatewayv2_stage" "lambda" {
   }
 }
 
-resource "aws_apigatewayv2_integration" "hello_world" {
+resource "aws_apigatewayv2_integration" "weight_app" {
   api_id = aws_apigatewayv2_api.lambda.id
 
-  integration_uri    = aws_lambda_function.hello_world.invoke_arn
+  integration_uri    = aws_lambda_function.weight_app.invoke_arn
   integration_type   = "AWS_PROXY"
   integration_method = "POST"
 }
 
-resource "aws_apigatewayv2_route" "hello_world" {
+resource "aws_apigatewayv2_route" "weight_app" {
   api_id = aws_apigatewayv2_api.lambda.id
 
-  route_key = "GET /hello"
-  target    = "integrations/${aws_apigatewayv2_integration.hello_world.id}"
+  route_key = "GET /weight"
+  target    = "integrations/${aws_apigatewayv2_integration.weight_app.id}"
 }
 
 resource "aws_cloudwatch_log_group" "api_gw" {
@@ -155,7 +155,7 @@ resource "aws_cloudwatch_log_group" "api_gw" {
 resource "aws_lambda_permission" "api_gw" {
   statement_id  = "AllowExecutionFromAPIGateway"
   action        = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.hello_world.function_name
+  function_name = aws_lambda_function.weight_app.function_name
   principal     = "apigateway.amazonaws.com"
 
   source_arn = "${aws_apigatewayv2_api.lambda.execution_arn}/*/*"

@@ -54,7 +54,7 @@ function App() {
   const [items, setItems] = React.useState<DecoratedHealthResult[]>([])
   React.useEffect(() => {
     fetch(
-      'https://mysplmqrfc.execute-api.eu-west-2.amazonaws.com/serverless_lambda_stage/hello'
+      'https://mysplmqrfc.execute-api.eu-west-2.amazonaws.com/serverless_lambda_stage/weight'
     )
       .then((res) => res.json())
       .then(
