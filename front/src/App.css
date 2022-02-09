@@ -3,8 +3,9 @@ body {
   justify-content: center;
 }
 
-#main {
+main {
   margin-bottom: 4em;
+  min-width: 400px;
 }
 
 h3 {
@@ -77,6 +78,15 @@ tbody tr:last-of-type {
   display: block;
   height: 22px;
   background-color: #009879;
+  border-radius: 3px;
+
+  transition: width 500ms ease-in-out;
+}
+
+.progress-bar-fill-days {
+  display: block;
+  height: 22px;
+  background-color: #004298;
   border-radius: 3px;
 
   transition: width 500ms ease-in-out;

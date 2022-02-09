@@ -1,4 +1,4 @@
-import { HealthResult } from './App'
+import { HealthResult } from './logic'
 
 export const RESULT = [
   {
