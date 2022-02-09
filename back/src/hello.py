@@ -6,6 +6,8 @@ import os
 
 dynamodb = boto3.resource('dynamodb')
 
+START_DATE = '2022-01-31'
+
 
 def hello(token):
     table = dynamodb.Table('weight')
@@ -19,7 +21,7 @@ def hello(token):
 
 def lambda_handler(event, context):
     client = login_to_fitbit()
-    d_from = datetime.datetime.strptime('2022-01-31', "%Y-%m-%d")
+    d_from = datetime.datetime.strptime(START_DATE, "%Y-%m-%d")
     response = fetch(client, d_from)
 
     return {
