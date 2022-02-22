@@ -3,6 +3,8 @@ import './App.css'
 import { fetchData } from './biz/fetchData'
 import { calculations, DecoratedHealthResult } from './biz/logic'
 
+const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+
 function App() {
   const [items, setItems] = React.useState<DecoratedHealthResult[]>([])
 
@@ -16,6 +18,7 @@ function App() {
     amountLost,
     amountLeftToLose,
     daysToRobRoyWay,
+    weeksToRobRoyWay,
     fatLossProgress,
     periodProgress,
     desiredWeight,
@@ -27,7 +30,9 @@ function App() {
         <div className="progress-bar">
           <span
             className="progress-bar-fill "
-            style={{ width: `${fatLossProgress}%` }}
+            style={{
+              width: `${fatLossProgress > 100 ? 100 : fatLossProgress}%`,
+            }}
           ></span>
           <span className="tooltiptext">{fatLossProgress}% fat lost</span>
         </div>
@@ -36,7 +41,7 @@ function App() {
         <div className="progress-bar">
           <span
             className="progress-bar-fill-days"
-            style={{ width: `${periodProgress}%` }}
+            style={{ width: `${periodProgress > 100 ? 100 : periodProgress}%` }}
           ></span>
           <span className="tooltiptext">
             {periodProgress}% into time period
@@ -53,7 +58,10 @@ function App() {
             kg
           </h3>
           <p className="target-date">
-            <em>{daysToRobRoyWay} days remaining to 19kg goal</em>
+            <em>
+              {weeksToRobRoyWay} weeks and {daysToRobRoyWay} days remaining to
+              19kg goal
+            </em>
           </p>
           <table>
             <thead>
@@ -74,7 +82,9 @@ function App() {
             <tbody>
               {items.map((result: DecoratedHealthResult) => (
                 <tr key={result.date}>
-                  <td>{result.date}</td>
+                  <td>
+                    {result.date} - {days[new Date(result.date).getDay()]}
+                  </td>
                   <td>
                     <span className={result.weightColor}>
                       {result.totalWeight}

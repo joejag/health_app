@@ -37,3 +37,5 @@ response.json
 
 # Joe added
 *.zip
+
+__pycache__
