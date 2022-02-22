@@ -60,7 +60,7 @@ function App() {
           <p className="target-date">
             <em>
               {weeksToRobRoyWay} weeks and {daysToRobRoyWay} days remaining to
-              19kg goal
+              21kg goal
             </em>
           </p>
           <table>
@@ -83,7 +83,9 @@ function App() {
               {items.map((result: DecoratedHealthResult) => (
                 <tr key={result.date}>
                   <td>
-                    {result.date} - {days[new Date(result.date).getDay()]}
+                    {days[new Date(result.date).getDay()]}
+                    <br />
+                    {result.date}
                   </td>
                   <td>
                     <span className={result.weightColor}>
@@ -107,7 +109,7 @@ function App() {
         </>
       )}
 
-      <p>
+      <div className="previous-weights">
         19kg: Ben More
         <br />
         21kg: West Highland Way / Beinn Eighe
@@ -115,7 +117,7 @@ function App() {
         24kg: Ben An
         <br />
         27kg: South Glen Sheil Ridge / Ben Lui
-      </p>
+      </div>
     </main>
   )
 }
