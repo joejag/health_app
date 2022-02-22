@@ -25,7 +25,7 @@ export interface HealthCalculations {
   desiredWeight: number
 }
 
-const FAT_LOSS_GOAL = 4 // kgs
+const FAT_LOSS_GOAL = 3 // kgs
 export const ROB_ROY_WAY_DATE = new Date('04/26/2022')
 const PERIOD_LENGTH = 4 * 7
 
