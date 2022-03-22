@@ -1,3 +1,4 @@
+import pprint
 import json
 import boto3
 import fitbit
@@ -160,6 +161,6 @@ def cachable(name, fn):
             outfile.write(json.dumps(result))
         return result
 
-# import pprint
+
 # pp = pprint.PrettyPrinter(indent=4)
 # pp.pprint(lambda_handler({}, {}))

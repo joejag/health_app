@@ -1,5 +1,7 @@
-import React from 'react'
 import './App.css'
+
+import React from 'react'
+
 import { fetchData } from './biz/fetchData'
 import { calculations, DecoratedHealthResult } from './biz/logic'
 
@@ -23,6 +25,10 @@ function App() {
     periodProgress,
     desiredWeight,
   } = calculations(items)
+
+  const zippedItems = items.map((e: any, i: number) => {
+    return [e, items.slice(i + 1)]
+  })
 
   return (
     <main>
@@ -80,29 +86,12 @@ function App() {
               </tr>
             </thead>
             <tbody>
-              {items.map((result: DecoratedHealthResult) => (
-                <tr key={result.date}>
-                  <td>
-                    {days[new Date(result.date).getDay()]}
-                    <br />
-                    {result.date}
-                  </td>
-                  <td>
-                    <span className={result.weightColor}>
-                      {result.totalWeight}
-                    </span>
-                    <br />
-                    <span className={`fat ${result.fatColor}`}>
-                      {result.fat}
-                    </span>{' '}
-                    + <span>{result.lean}</span>
-                  </td>
-                  <td>
-                    <span className={result.diffColor}>{result.diff}</span>
-                    <br />
-                    {result.exercise} - {result.ate}
-                  </td>
-                </tr>
+              {zippedItems.map((result: any) => (
+                <Row
+                  result={result[0]}
+                  previous={result[1]}
+                  key={result.date}
+                />
               ))}
             </tbody>
           </table>
@@ -119,6 +108,64 @@ function App() {
         27kg: South Glen Sheil Ridge / Ben Lui
       </div>
     </main>
+  )
+}
+
+const Row = ({
+  result,
+  previous,
+}: {
+  result: DecoratedHealthResult
+  previous: [DecoratedHealthResult]
+}) => {
+  const bestWeight = Math.min(...previous.map((p) => p.totalWeight))
+  const isDropInWeight =
+    previous.length > 0 &&
+    Math.floor(result.totalWeight) < Math.floor(bestWeight)
+
+  const bestFat = Math.min(...previous.map((p) => p.fat))
+  const isDropInFat =
+    previous.length > 0 && Math.floor(result.fat) < Math.floor(bestFat)
+
+  return (
+    <>
+      <tr>
+        <td>
+          {days[new Date(result.date).getDay()]}
+          <br />
+          {result.date}
+        </td>
+        <td>
+          <span className={result.weightColor}>{result.totalWeight}</span>
+          <br />
+          <span className={`fat ${result.fatColor}`}>{result.fat}</span> +{' '}
+          <span>{result.lean}</span>
+        </td>
+        <td>
+          <span className={result.diffColor}>{result.diff}</span>
+          <br />
+          {result.exercise} - {result.ate}
+        </td>
+      </tr>
+      {isDropInWeight && (
+        <tr>
+          <td colSpan={3}>
+            <img src="/images/tada1.png" height="100px" />
+            <br />
+            <strong>Lean drop</strong>
+          </td>
+        </tr>
+      )}
+      {isDropInFat && (
+        <tr>
+          <td colSpan={3}>
+            <img src="/images/tada2.webp" height="100px" />
+            <br />
+            <strong>Fat drop</strong>
+          </td>
+        </tr>
+      )}
+    </>
   )
 }
 

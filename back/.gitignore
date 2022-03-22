@@ -39,3 +39,4 @@ response.json
 *.zip
 
 __pycache__
+src/*.json
