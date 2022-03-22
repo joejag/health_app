@@ -1,13 +1,16 @@
 import './App.css'
 
 import React from 'react'
+import Confetti from 'react-confetti'
 
 import { fetchData } from './biz/fetchData'
+import { judgeDay } from './biz/judge'
 import { calculations, DecoratedHealthResult } from './biz/logic'
 
 const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 
 function App() {
+  const { width, height } = useWindowSize()
   const [items, setItems] = React.useState<DecoratedHealthResult[]>([])
 
   React.useEffect(() => {
@@ -30,8 +33,18 @@ function App() {
     return [e, items.slice(i + 1)]
   })
 
+  let celebration = false
+  if (items.length > 0) {
+    const { isDropInFat, isDropInWeight } = judgeDay(
+      zippedItems[0][0],
+      zippedItems[0][1]
+    )
+    celebration = isDropInFat || isDropInWeight
+  }
+
   return (
     <main>
+      {celebration && <Confetti width={width} height={height} opacity={0.5} />}
       <div className="progress-container tooltip">
         <div className="progress-bar">
           <span
@@ -66,7 +79,7 @@ function App() {
           <p className="target-date">
             <em>
               {weeksToRobRoyWay} weeks and {daysToRobRoyWay} days remaining to
-              21kg goal
+              RobRoyWay
             </em>
           </p>
           <table>
@@ -118,14 +131,7 @@ const Row = ({
   result: DecoratedHealthResult
   previous: [DecoratedHealthResult]
 }) => {
-  const bestWeight = Math.min(...previous.map((p) => p.totalWeight))
-  const isDropInWeight =
-    previous.length > 0 &&
-    Math.floor(result.totalWeight) < Math.floor(bestWeight)
-
-  const bestFat = Math.min(...previous.map((p) => p.fat))
-  const isDropInFat =
-    previous.length > 0 && Math.floor(result.fat) < Math.floor(bestFat)
+  const { isDropInFat, isDropInWeight } = judgeDay(result, previous)
 
   return (
     <>
@@ -147,26 +153,42 @@ const Row = ({
           {result.exercise} - {result.ate}
         </td>
       </tr>
-      {isDropInWeight && (
+      {(isDropInWeight || isDropInFat) && (
         <tr>
           <td colSpan={3}>
-            <img src="/images/tada1.png" height="100px" />
+            {isDropInWeight && <img src="/images/tada1.png" height="100px" />}
+            {isDropInFat && <img src="/images/tada2.webp" height="100px" />}
+
             <br />
-            <strong>Lean drop</strong>
-          </td>
-        </tr>
-      )}
-      {isDropInFat && (
-        <tr>
-          <td colSpan={3}>
-            <img src="/images/tada2.webp" height="100px" />
-            <br />
-            <strong>Fat drop</strong>
+
+            {isDropInWeight && isDropInFat && (
+              <strong> Weight &amp; Fat drop </strong>
+            )}
+            {isDropInWeight && !isDropInFat && <strong>Weight drop</strong>}
+            {isDropInFat && !isDropInWeight && <strong>Fat drop</strong>}
           </td>
         </tr>
       )}
     </>
   )
+}
+
+const useWindowSize = () => {
+  const [windowSize, setWindowSize] = React.useState({
+    width: window.innerWidth,
+    height: window.innerHeight,
+  })
+
+  React.useEffect(() => {
+    window.addEventListener('resize', resizeHandler)
+    return () => {
+      window.removeEventListener('resize', resizeHandler)
+    }
+  }, [])
+  const resizeHandler = () => {
+    setWindowSize({ width: window.innerWidth, height: window.innerHeight })
+  }
+  return windowSize
 }
 
 export default App
