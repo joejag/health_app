@@ -7,7 +7,7 @@ import os
 
 dynamodb = boto3.resource('dynamodb')
 
-START_DATE = '2022-02-28'
+START_DATE = '2022-04-25'
 
 
 def hello(token):
