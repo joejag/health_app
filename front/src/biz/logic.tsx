@@ -27,7 +27,7 @@ export interface HealthCalculations {
 }
 
 const FAT_LOSS_GOAL = 3 // kgs
-export const ROB_ROY_WAY_DATE = new Date('04/26/2022')
+export const ROB_ROY_WAY_DATE = new Date('03/10/2023')
 const PERIOD_LENGTH = 4 * 7
 
 export const calculations = (

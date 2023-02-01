@@ -79,7 +79,7 @@ function App() {
           <p className="target-date">
             <em>
               {weeksToRobRoyWay} weeks and {daysToRobRoyWay} days remaining to
-              RobRoyWay
+              Morocco Trek
             </em>
           </p>
           <table>
@@ -91,11 +91,7 @@ function App() {
                   <br />
                   (Fat + Lean)
                 </th>
-                <th>
-                  Calories
-                  <br />
-                  (Exercise - Ate)
-                </th>
+                <th>Calories</th>
               </tr>
             </thead>
             <tbody>
@@ -112,13 +108,13 @@ function App() {
       )}
 
       <div className="previous-weights">
-        19kg: Ben More
+        19kg: Ben More (80kg)
         <br />
-        21kg: West Highland Way / Beinn Eighe
+        21kg: West Highland Way (85kg)
         <br />
-        24kg: Ben An
+        27kg: Rob Roy Way (89kg)
         <br />
-        27kg: South Glen Sheil Ridge / Ben Lui
+        34kg: Laugavegur (96kg)
       </div>
     </main>
   )
@@ -147,11 +143,7 @@ const Row = ({
           <span className={`fat ${result.fatColor}`}>{result.fat}</span> +{' '}
           <span>{result.lean}</span>
         </td>
-        <td>
-          <span className={result.diffColor}>{result.diff}</span>
-          <br />
-          {result.exercise} - {result.ate}
-        </td>
+        <td>{result.ate}</td>
       </tr>
       {(isDropInWeight || isDropInFat) && (
         <tr>
