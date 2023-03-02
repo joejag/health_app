@@ -2,6 +2,7 @@ import datetime
 import json
 import boto3
 import fitbit
+import jwt
 
 dynamodb = boto3.resource("dynamodb")
 
@@ -68,7 +69,14 @@ def login_to_fitbit():
         access_token=creds["access_token"],
         refresh_cb=hello,
     )
-    client.client.refresh_token()
+    try:
+        jwt.decode(
+            creds["access_token"],
+            algorithms=["HS256"],
+            options={"verify_signature": False},
+        )
+    except jwt.ExpiredSignatureError:
+        client.client.refresh_token()
     return client
 
 
