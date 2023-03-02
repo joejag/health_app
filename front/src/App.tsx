@@ -9,16 +9,31 @@ import { calculations, DecoratedHealthResult } from './biz/logic'
 
 const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 
+const datesOfInterest = [
+  { when: '2023-01-04', label: 'Jan 2023' },
+  { when: '2023-02-01', label: 'Feb 2023' },
+  { when: '2023-03-01', label: 'Mar 2023' },
+]
+
+interface HistoricalDate {
+  when: string
+  label: string
+  result: DecoratedHealthResult
+}
+
 function App() {
   const { width, height } = useWindowSize()
   const [items, setItems] = React.useState<DecoratedHealthResult[]>([])
-  const [janWeight, setJanWeight] = React.useState<DecoratedHealthResult | null>(null)
-  const [febWeight, setFebWeight] = React.useState<DecoratedHealthResult | null>(null)
+  const [historicalWeights, setHistoricalWeights] = React.useState<HistoricalDate[]>([])
 
   React.useEffect(() => {
     fetchData(setItems, '2023-03-01')
-    fetchHistorical(setJanWeight, '2023-01-04')
-    fetchHistorical(setFebWeight, '2023-02-01')
+
+    datesOfInterest.forEach((d) => {
+      fetchHistorical((result: any) => {
+        setHistoricalWeights((c) => [{ ...d, result }, ...c])
+      }, d.when)
+    })
   }, [])
 
   const {
@@ -107,18 +122,16 @@ function App() {
           </tr>
         </thead>
         <tbody className="past">
-          <tr>
-            <td>Feb 2023</td>
-            <td>-</td>
-            <td>{febWeight?.total}kg</td>
-            <td>{febWeight?.fat}kg</td>
-          </tr>
-          <tr>
-            <td>Jan 2023</td>
-            <td>-</td>
-            <td>{janWeight?.total}kg</td>
-            <td>{janWeight?.fat}kg</td>
-          </tr>
+          {historicalWeights
+            .sort((h1, h2) => (h1.when > h2.when ? -1 : 1))
+            .map((doi) => (
+              <tr key={doi.label}>
+                <td>{doi.label}</td>
+                <td>-</td>
+                <td>{doi.result.total}kg</td>
+                <td>{doi.result.fat}kg</td>
+              </tr>
+            ))}
           <tr>
             <td>Jul 2022</td>
             <td>Iceland</td>
