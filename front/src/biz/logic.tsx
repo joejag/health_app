@@ -6,6 +6,7 @@ export interface HealthResult {
   fat: number
   lean: number
   totalWeight: number
+  total: number
 }
 
 export interface DecoratedHealthResult extends HealthResult {
@@ -30,9 +31,7 @@ const FAT_LOSS_GOAL = 3 // kgs
 export const ROB_ROY_WAY_DATE = new Date('03/10/2023')
 const PERIOD_LENGTH = 4 * 7
 
-export const calculations = (
-  items: DecoratedHealthResult[]
-): HealthCalculations => {
+export const calculations = (items: DecoratedHealthResult[]): HealthCalculations => {
   if (items.length === 0) {
     return {
       amountLost: 0,
@@ -54,8 +53,7 @@ export const calculations = (
   const daysToRobRoyWay = daysTo(ROB_ROY_WAY_DATE) % 7
   const desiredWeight = dataAtStart.fat - FAT_LOSS_GOAL
   const amountLost = dataToday.fat - dataAtStart.fat
-  const amountLeftToLose =
-    dataToday.fat - desiredWeight > 0 ? dataToday.fat - desiredWeight : 0
+  const amountLeftToLose = dataToday.fat - desiredWeight > 0 ? dataToday.fat - desiredWeight : 0
   const fatLossProgress = Math.abs(amountLost) / FAT_LOSS_GOAL
   const periodProgress = daysTo(new Date(dataAtStart.date)) / PERIOD_LENGTH
 

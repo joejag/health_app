@@ -36,6 +36,14 @@ h3 {
   color: green;
 }
 
+tr.past {
+  background-color: #095798;
+}
+
+tbody.past tr:last-of-type {
+  border-bottom: 2px solid #095798;
+}
+
 table {
   border-collapse: collapse;
   margin: 25px 0;

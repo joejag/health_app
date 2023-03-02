@@ -3,7 +3,7 @@ import './App.css'
 import React from 'react'
 import Confetti from 'react-confetti'
 
-import { fetchData } from './biz/fetchData'
+import { fetchData, fetchHistorical } from './biz/fetchData'
 import { judgeDay } from './biz/judge'
 import { calculations, DecoratedHealthResult } from './biz/logic'
 
@@ -12,13 +12,13 @@ const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 function App() {
   const { width, height } = useWindowSize()
   const [items, setItems] = React.useState<DecoratedHealthResult[]>([])
-  const [janWeight, setJanWeight] = React.useState<DecoratedHealthResult[]>([])
-  const [febWeight, setFebWeight] = React.useState<DecoratedHealthResult[]>([])
+  const [janWeight, setJanWeight] = React.useState<DecoratedHealthResult | null>(null)
+  const [febWeight, setFebWeight] = React.useState<DecoratedHealthResult | null>(null)
 
   React.useEffect(() => {
     fetchData(setItems, '2023-03-01')
-    fetchData(setJanWeight, '2023-01-04')
-    fetchData(setFebWeight, '2023-02-01')
+    fetchHistorical(setJanWeight, '2023-01-04')
+    fetchHistorical(setFebWeight, '2023-02-01')
   }, [])
 
   const {
@@ -90,35 +90,61 @@ function App() {
             </thead>
             <tbody>
               {zippedItems.map((result: any) => (
-                <Row result={result[0]} previous={result[1]} key={result.date} />
+                <Row result={result[0]} previous={result[1]} key={result[0].date} />
               ))}
             </tbody>
           </table>
         </>
       )}
 
-      <div style={{ marginTop: '1em', marginBottom: '1em' }}>
-        {febWeight.length > 0 && (
-          <span>
-            Feb: {febWeight[0].totalWeight} : {febWeight[0].fat}
-          </span>
-        )}
-        {janWeight.length > 0 && (
-          <span>
-            Jan: {janWeight[0].totalWeight} : {janWeight[0].fat}
-          </span>
-        )}
-      </div>
-
-      <div className="previous-weights">
-        19kg: Ben More (80kg)
-        <br />
-        21kg: West Highland Way (85kg)
-        <br />
-        27kg: Rob Roy Way (89kg)
-        <br />
-        34kg: Laugavegur (96kg)
-      </div>
+      <table>
+        <thead>
+          <tr className="past">
+            <th>When</th>
+            <th>Event</th>
+            <th>Weight</th>
+            <th>Fat</th>
+          </tr>
+        </thead>
+        <tbody className="past">
+          <tr>
+            <td>Feb 2023</td>
+            <td>-</td>
+            <td>{febWeight?.total}kg</td>
+            <td>{febWeight?.fat}kg</td>
+          </tr>
+          <tr>
+            <td>Jan 2023</td>
+            <td>-</td>
+            <td>{janWeight?.total}kg</td>
+            <td>{janWeight?.fat}kg</td>
+          </tr>
+          <tr>
+            <td>Jul 2022</td>
+            <td>Iceland</td>
+            <td>96kg</td>
+            <td>34kg</td>
+          </tr>
+          <tr>
+            <td>Apr 2022</td>
+            <td>RRW</td>
+            <td>89kg</td>
+            <td>27kg</td>
+          </tr>
+          <tr>
+            <td>May 2021</td>
+            <td>WHW</td>
+            <td>85kg</td>
+            <td>21kg</td>
+          </tr>
+          <tr>
+            <td>Sep 2020</td>
+            <td>Ben More</td>
+            <td>80kg</td>
+            <td>19kg</td>
+          </tr>
+        </tbody>
+      </table>
     </main>
   )
 }
@@ -144,8 +170,8 @@ const Row = ({ result, previous }: { result: DecoratedHealthResult; previous: [D
       {(isDropInWeight || isDropInFat) && (
         <tr>
           <td colSpan={3}>
-            {isDropInWeight && <img src="/images/tada1.png" height="100px" />}
-            {isDropInFat && <img src="/images/tada2.webp" height="100px" />}
+            {isDropInWeight && <img src="/images/tada1.png" height="100px" alt="" />}
+            {isDropInFat && <img src="/images/tada2.webp" height="100px" alt="" />}
 
             <br />
 

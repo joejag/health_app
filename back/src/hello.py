@@ -14,12 +14,35 @@ def hello(token):
 
 
 def lambda_handler(event, context):
-    start_date = event.get("queryStringParameters", {"from": START_DATE}).get(
-        "from", START_DATE
-    )
+    start_date = event.get("queryStringParameters").get("start_date")
+    historical = event.get("queryStringParameters").get("historical")
 
     client = login_to_fitbit()
     d_from = datetime.datetime.strptime(start_date, "%Y-%m-%d")
+
+    if historical == "true":
+        table = dynamodb.Table("weight")
+        response = table.get_item(Key={"id": start_date})
+        if "Item" not in response:
+            w = fetch_weight(client, d_from, d_from)[0]
+            table.put_item(Item={"id": start_date, "weight": json.dumps(w)})
+
+        data = json.loads(table.get_item(Key={"id": start_date})["Item"]["weight"])
+        data["total"] = round(data["total"], 0)
+        data["fat"] = round(data["fat"], 0)
+        data["lean"] = round(data["lean"], 0)
+
+        return {
+            "statusCode": 200,
+            "headers": {
+                "Access-Control-Allow-Headers": "Content-Type",
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
+                "content-type": "application/json",
+            },
+            "body": json.dumps(data),
+        }
+
     response = fetch(client, d_from)
 
     return {

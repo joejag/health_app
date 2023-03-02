@@ -8,13 +8,32 @@ export const fetchData = (setItems: any, when: string) => {
   if (window.location.href.indexOf('localhost') > -1) {
     url = LOCAL_URL
   }
-  url += '?from=' + when
+  url += '?start_date=' + when + '&historical=false'
 
   fetch(url)
     .then((res) => res.json())
     .then(
       (result: any) => {
         setItems(decorate(result).reverse())
+      },
+      (error) => {
+        console.log(error)
+      }
+    )
+}
+
+export const fetchHistorical = (setItems: any, when: string) => {
+  let url = PRODUCTION_URL
+  if (window.location.href.indexOf('localhost') > -1) {
+    url = LOCAL_URL
+  }
+  url += '?start_date=' + when + '&historical=true'
+
+  fetch(url)
+    .then((res) => res.json())
+    .then(
+      (result: any) => {
+        setItems(decorate([result])[0])
       },
       (error) => {
         console.log(error)
