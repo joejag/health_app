@@ -18,15 +18,21 @@ export interface HealthCalculations {
   currentWeight: number
   periodProgress: number
   amountLeftToLose: number
-  daysToRobRoyWay: number
-  weeksToRobRoyWay: number
+  daysToNextBigEvent: number
+  weeksToNextBigEvent: number
+  nextBigEvent: string
   fatLossProgress: number
   desiredWeight: number
 }
 
+// CONFIG BLOCK
 const FAT_LOSS_GOAL = 3 // kgs
-export const ROB_ROY_WAY_DATE = new Date('03/10/2023')
-const PERIOD_LENGTH = 4 * 7
+const NEXT_BIG_EVENT = 'Morocco Trek'
+const NEXT_BIG_EVENT_DATE = new Date(2023, 3 - 1, 10)
+
+function getDaysInCurrentMonth() {
+  return new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).getDate()
+}
 
 export const calculations = (items: DecoratedHealthResult[]): HealthCalculations => {
   if (items.length === 0) {
@@ -35,8 +41,9 @@ export const calculations = (items: DecoratedHealthResult[]): HealthCalculations
       startWeight: 0,
       currentWeight: 0,
       amountLeftToLose: 0,
-      daysToRobRoyWay: 0,
-      weeksToRobRoyWay: 0,
+      daysToNextBigEvent: 0,
+      weeksToNextBigEvent: 0,
+      nextBigEvent: '',
       fatLossProgress: 0,
       periodProgress: 0,
       desiredWeight: 0,
@@ -46,17 +53,18 @@ export const calculations = (items: DecoratedHealthResult[]): HealthCalculations
   const dataToday = items[0]
   const dataAtStart = items[items.length - 1]
 
-  const weeksToRobRoyWay = daysTo(ROB_ROY_WAY_DATE) / 7
-  const daysToRobRoyWay = daysTo(ROB_ROY_WAY_DATE) % 7
+  const weeksToNextBigEvent = daysTo(NEXT_BIG_EVENT_DATE) / 7
+  const daysToNextBigEvent = daysTo(NEXT_BIG_EVENT_DATE) % 7
   const desiredWeight = dataAtStart.fat - FAT_LOSS_GOAL
   const amountLost = dataToday.fat - dataAtStart.fat
   const amountLeftToLose = dataToday.fat - desiredWeight > 0 ? dataToday.fat - desiredWeight : 0
   const fatLossProgress = Math.abs(amountLost) / FAT_LOSS_GOAL
-  const periodProgress = daysTo(new Date(dataAtStart.date)) / PERIOD_LENGTH
+  const periodProgress = daysTo(new Date(dataAtStart.date)) / getDaysInCurrentMonth()
 
   return {
-    weeksToRobRoyWay: Math.floor(weeksToRobRoyWay),
-    daysToRobRoyWay,
+    weeksToNextBigEvent: Math.floor(weeksToNextBigEvent),
+    daysToNextBigEvent: daysToNextBigEvent,
+    nextBigEvent: NEXT_BIG_EVENT,
     startWeight: dataAtStart.fat,
     currentWeight: dataToday.fat,
     desiredWeight: Math.round(desiredWeight * 10) / 10,

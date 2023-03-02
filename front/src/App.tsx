@@ -53,8 +53,9 @@ function App() {
     currentWeight,
     amountLost,
     amountLeftToLose,
-    daysToRobRoyWay,
-    weeksToRobRoyWay,
+    daysToNextBigEvent,
+    weeksToNextBigEvent,
+    nextBigEvent,
     fatLossProgress,
     periodProgress,
     desiredWeight,
@@ -106,7 +107,7 @@ function App() {
           </h3>
           <p className="target-date">
             <em>
-              {weeksToRobRoyWay} weeks and {daysToRobRoyWay} days remaining to Morocco Trek
+              {weeksToNextBigEvent} weeks and {daysToNextBigEvent} days remaining to {nextBigEvent}
             </em>
           </p>
 
