@@ -4,6 +4,8 @@ body {
 }
 
 main {
+  margin-left: 0.5em;
+  margin-right: 0.5em;
   margin-bottom: 4em;
   min-width: 400px;
 }

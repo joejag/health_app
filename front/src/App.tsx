@@ -12,9 +12,13 @@ const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 function App() {
   const { width, height } = useWindowSize()
   const [items, setItems] = React.useState<DecoratedHealthResult[]>([])
+  const [janWeight, setJanWeight] = React.useState<DecoratedHealthResult[]>([])
+  const [febWeight, setFebWeight] = React.useState<DecoratedHealthResult[]>([])
 
   React.useEffect(() => {
-    fetchData(setItems)
+    fetchData(setItems, '2023-03-01')
+    fetchData(setJanWeight, '2023-01-04')
+    fetchData(setFebWeight, '2023-02-01')
   }, [])
 
   const {
@@ -35,10 +39,7 @@ function App() {
 
   let celebration = false
   if (items.length > 0) {
-    const { isDropInFat, isDropInWeight } = judgeDay(
-      zippedItems[0][0],
-      zippedItems[0][1]
-    )
+    const { isDropInFat, isDropInWeight } = judgeDay(zippedItems[0][0], zippedItems[0][1])
     celebration = isDropInFat || isDropInWeight
   }
 
@@ -58,28 +59,21 @@ function App() {
       </div>
       <div className="progress-container tooltip">
         <div className="progress-bar">
-          <span
-            className="progress-bar-fill-days"
-            style={{ width: `${periodProgress > 100 ? 100 : periodProgress}%` }}
-          ></span>
-          <span className="tooltiptext">
-            {periodProgress}% into time period
-          </span>
+          <span className="progress-bar-fill-days" style={{ width: `${periodProgress > 100 ? 100 : periodProgress}%` }}></span>
+          <span className="tooltiptext">{periodProgress}% into time period</span>
         </div>
       </div>
 
       {items.length > 0 && (
         <>
           <h3>
-            {startWeight}kg | <span className="green">{amountLost}kg</span> |{' '}
-            <span className={`fat`}>{currentWeight}kg</span> |{' '}
+            {startWeight}kg | <span className="green">{amountLost}kg</span> | <span className={`fat`}>{currentWeight}kg</span> |{' '}
             <span className="red">{amountLeftToLose}kg</span> | {desiredWeight}
             kg
           </h3>
           <p className="target-date">
             <em>
-              {weeksToRobRoyWay} weeks and {daysToRobRoyWay} days remaining to
-              Morocco Trek
+              {weeksToRobRoyWay} weeks and {daysToRobRoyWay} days remaining to Morocco Trek
             </em>
           </p>
           <table>
@@ -96,16 +90,25 @@ function App() {
             </thead>
             <tbody>
               {zippedItems.map((result: any) => (
-                <Row
-                  result={result[0]}
-                  previous={result[1]}
-                  key={result.date}
-                />
+                <Row result={result[0]} previous={result[1]} key={result.date} />
               ))}
             </tbody>
           </table>
         </>
       )}
+
+      <div style={{ marginTop: '1em', marginBottom: '1em' }}>
+        {febWeight.length > 0 && (
+          <span>
+            Feb: {febWeight[0].totalWeight} : {febWeight[0].fat}
+          </span>
+        )}
+        {janWeight.length > 0 && (
+          <span>
+            Jan: {janWeight[0].totalWeight} : {janWeight[0].fat}
+          </span>
+        )}
+      </div>
 
       <div className="previous-weights">
         19kg: Ben More (80kg)
@@ -120,13 +123,7 @@ function App() {
   )
 }
 
-const Row = ({
-  result,
-  previous,
-}: {
-  result: DecoratedHealthResult
-  previous: [DecoratedHealthResult]
-}) => {
+const Row = ({ result, previous }: { result: DecoratedHealthResult; previous: [DecoratedHealthResult] }) => {
   const { isDropInFat, isDropInWeight } = judgeDay(result, previous)
 
   return (
@@ -140,8 +137,7 @@ const Row = ({
         <td>
           <span className={result.weightColor}>{result.totalWeight}</span>
           <br />
-          <span className={`fat ${result.fatColor}`}>{result.fat}</span> +{' '}
-          <span>{result.lean}</span>
+          <span className={`fat ${result.fatColor}`}>{result.fat}</span> + <span>{result.lean}</span>
         </td>
         <td>{result.ate}</td>
       </tr>
@@ -153,9 +149,7 @@ const Row = ({
 
             <br />
 
-            {isDropInWeight && isDropInFat && (
-              <strong> Weight &amp; Fat drop </strong>
-            )}
+            {isDropInWeight && isDropInFat && <strong> Weight &amp; Fat drop </strong>}
             {isDropInWeight && !isDropInFat && <strong>Weight drop</strong>}
             {isDropInFat && !isDropInWeight && <strong>Fat drop</strong>}
           </td>

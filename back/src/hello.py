@@ -14,8 +14,12 @@ def hello(token):
 
 
 def lambda_handler(event, context):
+    start_date = event.get("queryStringParameters", {"from": START_DATE}).get(
+        "from", START_DATE
+    )
+
     client = login_to_fitbit()
-    d_from = datetime.datetime.strptime(START_DATE, "%Y-%m-%d")
+    d_from = datetime.datetime.strptime(start_date, "%Y-%m-%d")
     response = fetch(client, d_from)
 
     return {
