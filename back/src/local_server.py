@@ -16,20 +16,20 @@ class handler(BaseHTTPRequestHandler):
         self.send_header("Content-type", "application/json")
         self.end_headers()
 
-        print(parse_qs(urlparse(self.path).query))
         start_date = parse_qs(urlparse(self.path).query)["start_date"][0]
         historical = parse_qs(urlparse(self.path).query)["historical"][0]
 
-        if handler.cached_response.get(start_date) == None:
+        cache_key = self.path
+        if handler.cached_response.get(cache_key) == None:
             event = {
                 "queryStringParameters": {
                     "start_date": start_date,
                     "historical": historical,
                 }
             }
-            handler.cached_response[start_date] = lambda_handler(event, {})["body"]
+            handler.cached_response[cache_key] = lambda_handler(event, {})["body"]
 
-        self.wfile.write(bytes(handler.cached_response[start_date], "utf8"))
+        self.wfile.write(bytes(handler.cached_response[cache_key], "utf8"))
 
 
 with HTTPServer(("", 8000), handler) as server:

@@ -7,42 +7,24 @@ import jwt
 dynamodb = boto3.resource("dynamodb")
 
 
-def hello(token):
-    table = dynamodb.Table("weight")
-    table.put_item(Item={"id": "joe", "creds": json.dumps(token)})
-
-
 def lambda_handler(event, context):
     start_date = event.get("queryStringParameters").get("start_date")
     historical = event.get("queryStringParameters").get("historical")
-
-    client = login_to_fitbit()
-    d_from = datetime.datetime.strptime(start_date, "%Y-%m-%d")
 
     if historical == "true":
         table = dynamodb.Table("weight")
         response = table.get_item(Key={"id": start_date})
         if "Item" not in response:
-            w = fetch_weight(client, d_from, d_from)[0]
+            w = fetch_weight(client, start_date, start_date)[0]
             table.put_item(Item={"id": start_date, "weight": json.dumps(w)})
 
-        data = json.loads(table.get_item(Key={"id": start_date})["Item"]["weight"])
-        data["total"] = round(data["total"], 0)
-        data["fat"] = round(data["fat"], 0)
-        data["lean"] = round(data["lean"], 0)
-
-        return {
-            "statusCode": 200,
-            "headers": {
-                "Access-Control-Allow-Headers": "Content-Type",
-                "Access-Control-Allow-Origin": "*",
-                "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
-                "content-type": "application/json",
-            },
-            "body": json.dumps(data),
-        }
-
-    response = fetch(client, d_from)
+        response = json.loads(table.get_item(Key={"id": start_date})["Item"]["weight"])
+        response["total"] = round(response["total"], 0)
+        response["fat"] = round(response["fat"], 0)
+        response["lean"] = round(response["lean"], 0)
+    else:
+        client = login_to_fitbit()
+        response = fetch(client, datetime.datetime.strptime(start_date, "%Y-%m-%d"))
 
     return {
         "statusCode": 200,
@@ -56,6 +38,11 @@ def lambda_handler(event, context):
     }
 
 
+def store_fitbit_token(token):
+    table = dynamodb.Table("weight")
+    table.put_item(Item={"id": "joe", "creds": json.dumps(token)})
+
+
 def login_to_fitbit():
     table = dynamodb.Table("weight")
     response = table.get_item(Key={"id": "joe"})
@@ -65,7 +52,7 @@ def login_to_fitbit():
         client_secret="516c12387e20ea5f5d2516d06a44bdd8",
         refresh_token=creds["refresh_token"],
         access_token=creds["access_token"],
-        refresh_cb=hello,
+        refresh_cb=store_fitbit_token,
     )
     try:
         jwt.decode(
