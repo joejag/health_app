@@ -6,8 +6,6 @@ import jwt
 
 dynamodb = boto3.resource("dynamodb")
 
-START_DATE = "2023-02-28"
-
 
 def hello(token):
     table = dynamodb.Table("weight")
