@@ -3,6 +3,7 @@ import './App.css'
 import React from 'react'
 import Confetti from 'react-confetti'
 
+import { Estimate, estimate } from './biz/estimate'
 import { fetchData, fetchHistorical } from './biz/fetchData'
 import { judgeDay } from './biz/judge'
 import { calculations, DecoratedHealthResult } from './biz/logic'
@@ -10,12 +11,21 @@ import { calculations, DecoratedHealthResult } from './biz/logic'
 const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 
 const datesOfInterest = [
-  { when: '2023-01-04', label: 'Jan 2023' },
+  { when: '2023-01-01', label: 'Jan 2023' },
   { when: '2023-02-01', label: 'Feb 2023' },
   { when: '2023-03-01', label: 'Mar 2023' },
-]
+  { when: '2023-04-01', label: 'Apr 2023' },
+  { when: '2023-05-01', label: 'May 2023' },
+  { when: '2023-06-01', label: 'Jun 2023' },
+  { when: '2023-07-01', label: 'Jul 2023' },
+  { when: '2023-08-01', label: 'Aug 2023' },
+  { when: '2023-09-01', label: 'Sep 2023' },
+  { when: '2023-10-01', label: 'Oct 2023' },
+  { when: '2023-11-01', label: 'Nov 2023' },
+  { when: '2023-12-01', label: 'Dec 2023' },
+].filter((doi) => new Date(doi.when) < new Date())
 
-interface HistoricalDate {
+export interface HistoricalDate {
   when: string
   label: string
   result: DecoratedHealthResult
@@ -27,7 +37,9 @@ function App() {
   const [historicalWeights, setHistoricalWeights] = React.useState<HistoricalDate[]>([])
 
   React.useEffect(() => {
-    fetchData(setItems, '2023-03-01')
+    const today = new Date()
+    const firstDay = `${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, '0')}-01`
+    fetchData(setItems, firstDay)
 
     datesOfInterest.forEach((d) => {
       fetchHistorical((result: any) => {
@@ -58,6 +70,12 @@ function App() {
     celebration = isDropInFat || isDropInWeight
   }
 
+  const historicalSorted = historicalWeights.sort((h1, h2) => (h1.when > h2.when ? -1 : 1))
+  let futureEstimates: Estimate[] = []
+  if (historicalSorted.length > 0) {
+    futureEstimates = estimate(historicalSorted[0])
+  }
+
   return (
     <main>
       {celebration && <Confetti width={width} height={height} opacity={0.5} />}
@@ -81,7 +99,7 @@ function App() {
 
       {items.length > 0 && (
         <>
-          <h3>
+          <h3 className="justify">
             {startWeight}kg | <span className="green">{amountLost}kg</span> | <span className={`fat`}>{currentWeight}kg</span> |{' '}
             <span className="red">{amountLeftToLose}kg</span> | {desiredWeight}
             kg
@@ -91,6 +109,9 @@ function App() {
               {weeksToRobRoyWay} weeks and {daysToRobRoyWay} days remaining to Morocco Trek
             </em>
           </p>
+
+          <h3>This Month</h3>
+
           <table>
             <thead>
               <tr>
@@ -112,6 +133,29 @@ function App() {
         </>
       )}
 
+      <h3>Estimate to 20kg fat</h3>
+
+      <table>
+        <thead>
+          <tr className="estimate">
+            <th>When</th>
+            <th>Weight</th>
+            <th>Fat</th>
+          </tr>
+        </thead>
+        <tbody className="estimate">
+          {futureEstimates.map((est) => (
+            <tr key={est.when}>
+              <td>{est.label}</td>
+              <td>{est.total}kg</td>
+              <td>{est.fat}kg</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      <h3>Historical</h3>
+
       <table>
         <thead>
           <tr className="past">
@@ -122,16 +166,14 @@ function App() {
           </tr>
         </thead>
         <tbody className="past">
-          {historicalWeights
-            .sort((h1, h2) => (h1.when > h2.when ? -1 : 1))
-            .map((doi) => (
-              <tr key={doi.label}>
-                <td>{doi.label}</td>
-                <td>-</td>
-                <td>{doi.result.total}kg</td>
-                <td>{doi.result.fat}kg</td>
-              </tr>
-            ))}
+          {historicalSorted.map((doi) => (
+            <tr key={doi.label}>
+              <td>{doi.label}</td>
+              <td>-</td>
+              <td>{doi.result.total}kg</td>
+              <td>{doi.result.fat}kg</td>
+            </tr>
+          ))}
           <tr>
             <td>Jul 2022</td>
             <td>Iceland</td>
@@ -158,6 +200,7 @@ function App() {
           </tr>
         </tbody>
       </table>
+      <div style={{ marginTop: '3em' }}>&nbsp;</div>
     </main>
   )
 }

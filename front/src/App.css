@@ -10,7 +10,7 @@ main {
   min-width: 400px;
 }
 
-h3 {
+h3.justify {
   text-align: center;
   text-align-last: justify;
 }
@@ -34,6 +34,14 @@ h3 {
 
 .green {
   color: green;
+}
+
+tr.estimate {
+  background-color: #a29809;
+}
+
+tbody.estimate tr:last-of-type {
+  border-bottom: 2px solid #a29809;
 }
 
 tr.past {

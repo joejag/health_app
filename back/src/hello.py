@@ -1,4 +1,5 @@
 import datetime
+import calendar
 import json
 import boto3
 import fitbit
@@ -110,7 +111,8 @@ def fetch_calories(client, d_from, d_to):
 
 
 def fetch(client, d_from):
-    d_to = d_from + datetime.timedelta(days=4 * 7 - 1)
+    _, end_day = calendar.monthrange(d_from.year, d_from.month)
+    d_to = datetime.datetime(d_from.year, d_from.month, end_day)
     if d_to > datetime.datetime.now():
         d_to = datetime.datetime.now()
 
@@ -146,4 +148,4 @@ def fetch(client, d_from):
             }
         )
 
-    return result
+    return sorted(result, key=lambda r: r["date"])
