@@ -1,8 +1,6 @@
 export interface HealthResult {
   ate: string
   date: string
-  diff: number
-  exercise: string
   fat: number
   lean: number
   totalWeight: number
@@ -12,7 +10,6 @@ export interface HealthResult {
 export interface DecoratedHealthResult extends HealthResult {
   weightColor: string
   fatColor: string
-  diffColor: string
 }
 
 export interface HealthCalculations {
@@ -93,7 +90,6 @@ export const decorate = (input: HealthResult[]): DecoratedHealthResult[] => {
 
     let weightColor = 'yellow'
     let fatColor = 'yellow'
-    const diffColor = day.diff > 0 ? 'red' : 'green'
 
     if (i !== 0) {
       const previous = input[i - 1]
@@ -108,7 +104,6 @@ export const decorate = (input: HealthResult[]): DecoratedHealthResult[] => {
       ...day,
       weightColor,
       fatColor,
-      diffColor,
     })
   }
 
