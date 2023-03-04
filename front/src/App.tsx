@@ -8,7 +8,7 @@ import { Estimate, estimate } from './biz/estimate'
 import { fetchData, fetchHistorical } from './biz/fetchData'
 import { judgeDay } from './biz/judge'
 import {
-    baseMetabolicRate, calculateProgress, DecoratedHealthResult, HealthResult, nextBigEventDates
+    baseMetabolicRate, calculateProgress, DecoratedHealthResult, nextBigEventDates
 } from './biz/logic'
 import { useWindowSize } from './components/useWindowSize'
 
