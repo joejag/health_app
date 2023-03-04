@@ -98,9 +98,7 @@ function App() {
             justifyContent: 'center',
           }}
         >
-          <div>
-            <SpinnerRoundOutlined />
-          </div>
+          <SpinnerRoundOutlined />
         </div>
       )}
 
