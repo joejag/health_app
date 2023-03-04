@@ -8,6 +8,8 @@ import { fetchData, fetchHistorical } from './biz/fetchData'
 import { judgeDay } from './biz/judge'
 import { baseMetabolicRate, calculations, DecoratedHealthResult } from './biz/logic'
 
+const today = new Date()
+const month = today.toLocaleString('default', { month: 'long' })
 const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 
 const datesOfInterest = [
@@ -37,10 +39,10 @@ function App() {
   const [historicalWeights, setHistoricalWeights] = React.useState<HistoricalDate[]>([])
 
   React.useEffect(() => {
-    const today = new Date()
     const firstDay = `${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, '0')}-01`
     fetchData(setItems, firstDay)
 
+    setHistoricalWeights([])
     datesOfInterest.forEach((d) => {
       fetchHistorical((result: any) => {
         setHistoricalWeights((c) => [{ ...d, result }, ...c])
@@ -102,7 +104,7 @@ function App() {
 
       {items.length > 0 && (
         <>
-          <h3 className="justify">
+          <h3 className="justify" style={{ marginTop: '0.2em' }}>
             {startWeight}kg | <span className="green">{amountLost}kg</span> | <span className={`fat`}>{currentWeight}kg</span> |{' '}
             <span className="red">{amountLeftToLose}kg</span> | {desiredWeight}
             kg
@@ -111,11 +113,13 @@ function App() {
             <em>
               {weeksToNextBigEvent > 0 && <>{weeksToNextBigEvent} weeks</>}
               {weeksToNextBigEvent > 0 && daysToNextBigEvent > 0 && <> and </>}
-              {daysToNextBigEvent > 0 && <>{daysToNextBigEvent} days</>} remaining to {nextBigEvent}
+              {daysToNextBigEvent > 0 && <>{daysToNextBigEvent} days</>} until {nextBigEvent}
             </em>
           </p>
 
-          <h3>This Month - BMR {bmr}</h3>
+          <h2>
+            {month} - BMR {bmr}
+          </h2>
 
           <table>
             <thead>
@@ -138,7 +142,7 @@ function App() {
         </>
       )}
 
-      <h3>Estimate to 20kg fat</h3>
+      <h2>Estimate to 20kg fat</h2>
 
       <table>
         <thead>
@@ -159,7 +163,7 @@ function App() {
         </tbody>
       </table>
 
-      <h3>Historical</h3>
+      <h2>Historical</h2>
 
       <table>
         <thead>
@@ -172,7 +176,7 @@ function App() {
         </thead>
         <tbody className="past">
           {historicalSorted.map((doi) => (
-            <tr key={doi.label}>
+            <tr key={doi.when}>
               <td>{doi.label}</td>
               <td>-</td>
               <td>{doi.result.total}kg</td>
