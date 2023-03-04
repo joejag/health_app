@@ -8,7 +8,7 @@ import { Estimate, estimate } from './biz/estimate'
 import { fetchData, fetchHistorical } from './biz/fetchData'
 import { judgeDay } from './biz/judge'
 import {
-    baseMetabolicRate, calculateProgress, DecoratedHealthResult, nextBigEventDates
+    baseMetabolicRate, calculateProgress, DecoratedHealthResult, HealthResult, nextBigEventDates
 } from './biz/logic'
 import { useWindowSize } from './components/useWindowSize'
 
@@ -236,16 +236,11 @@ const DayReport = ({ result, previous, bmr }: { result: DecoratedHealthResult; p
 }
 
 const Historical = () => {
-  const [historicalWeights, setHistoricalWeights] = React.useState<HistoricalDate[]>([])
-  const historical = historicalWeights.sort((h1, h2) => (h1.when > h2.when ? -1 : 1))
+  const [historicalWeights, setHistoricalWeights] = React.useState<any[]>([])
 
   React.useEffect(() => {
-    setHistoricalWeights([])
-    datesOfInterest.forEach((d) => {
-      fetchHistorical((result: DecoratedHealthResult) => {
-        setHistoricalWeights((c) => [{ ...d, result }, ...c])
-      }, d.when)
-    })
+    const dates = datesOfInterest.map((d) => d.when).reverse()
+    fetchHistorical(setHistoricalWeights, dates)
   }, [])
 
   return (
@@ -261,12 +256,12 @@ const Historical = () => {
           </tr>
         </thead>
         <tbody className="past">
-          {historical.map((day) => (
-            <tr key={day.when}>
-              <td>{day.label}</td>
+          {historicalWeights.map((day) => (
+            <tr key={day.date}>
+              <td>{new Date(day.date).toLocaleString('default', { month: 'short', year: 'numeric' })}</td>
               <td>-</td>
-              <td>{day.result.total}kg</td>
-              <td>{day.result.fat}kg</td>
+              <td>{day.total}kg</td>
+              <td>{day.fat}kg</td>
             </tr>
           ))}
           <tr>

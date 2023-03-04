@@ -16,17 +16,17 @@ class handler(BaseHTTPRequestHandler):
         self.send_header("Content-type", "application/json")
         self.end_headers()
 
-        start_date = parse_qs(urlparse(self.path).query)["start_date"][0]
-        historical = parse_qs(urlparse(self.path).query)["historical"][0]
+        if self.path == "/favicon.ico":
+            return
+
+        query_params = parse_qs(urlparse(self.path).query)
+        clean_qps = {}
+        for key, value in query_params.items():
+            clean_qps[key] = value[0]
 
         cache_key = self.path
         if handler.cached_response.get(cache_key) == None:
-            event = {
-                "queryStringParameters": {
-                    "start_date": start_date,
-                    "historical": historical,
-                }
-            }
+            event = {"queryStringParameters": clean_qps}
             handler.cached_response[cache_key] = lambda_handler(event, {})["body"]
 
         self.wfile.write(bytes(handler.cached_response[cache_key], "utf8"))

@@ -8,7 +8,7 @@ export const fetchData = (setItems: Function, when: string) => {
   if (window.location.href.indexOf('localhost') > -1) {
     url = LOCAL_URL
   }
-  url += '?start_date=' + when + '&historical=false'
+  url += '?from_date=' + when
 
   fetch(url)
     .then((res) => res.json())
@@ -22,18 +22,18 @@ export const fetchData = (setItems: Function, when: string) => {
     )
 }
 
-export const fetchHistorical = (setItems: Function, when: string) => {
+export const fetchHistorical = (setItems: Function, when: string[]) => {
   let url = PRODUCTION_URL
   if (window.location.href.indexOf('localhost') > -1) {
     url = LOCAL_URL
   }
-  url += '?start_date=' + when + '&historical=true'
+  url += '?historical=' + when.join(',')
 
   fetch(url)
     .then((res) => res.json())
     .then(
       (result: any) => {
-        setItems(decorate([result])[0])
+        setItems(decorate(result))
       },
       (error) => {
         console.log(error)

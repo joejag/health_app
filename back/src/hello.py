@@ -8,24 +8,32 @@ import jwt
 dynamodb = boto3.resource("dynamodb")
 
 
-def lambda_handler(event, context):
-    start_date = event.get("queryStringParameters").get("start_date")
-    historical = event.get("queryStringParameters").get("historical")
-
-    if historical == "true":
-        table = dynamodb.Table("weight")
-        response = table.get_item(Key={"id": start_date})
-        if "Item" not in response:
-            w = fetch_weight(client, start_date, start_date)[0]
-            table.put_item(Item={"id": start_date, "weight": json.dumps(w)})
-
-        response = json.loads(table.get_item(Key={"id": start_date})["Item"]["weight"])
-        response["total"] = round(response["total"], 0)
-        response["fat"] = round(response["fat"], 0)
-        response["lean"] = round(response["lean"], 0)
-    else:
+def fetch_historical(start_date):
+    table = dynamodb.Table("weight")
+    response = table.get_item(Key={"id": start_date})
+    if "Item" not in response:
         client = login_to_fitbit()
-        response = fetch(client, datetime.datetime.strptime(start_date, "%Y-%m-%d"))
+        w = fetch_weight(client, start_date, start_date)[0]
+        table.put_item(Item={"id": start_date, "weight": json.dumps(w)})
+
+    response = json.loads(table.get_item(Key={"id": start_date})["Item"]["weight"])
+    response["total"] = round(response["total"], 0)
+    response["fat"] = round(response["fat"], 0)
+    response["lean"] = round(response["lean"], 0)
+    response["date"] = datetime.datetime.strptime(
+        response["dateTime"], "%Y-%m-%d"
+    ).isoformat()
+    return response
+
+
+def lambda_handler(event, context):
+    if "historical" in event.get("queryStringParameters"):
+        dates = event["queryStringParameters"]["historical"].split(",")
+        response = list(map(fetch_historical, dates))
+    else:
+        from_date = event.get("queryStringParameters").get("from_date")
+        client = login_to_fitbit()
+        response = fetch(client, datetime.datetime.strptime(from_date, "%Y-%m-%d"))
 
     return {
         "statusCode": 200,
