@@ -109,7 +109,9 @@ function App() {
           </h3>
           <p className="target-date">
             <em>
-              {weeksToNextBigEvent} weeks and {daysToNextBigEvent} days remaining to {nextBigEvent}
+              {weeksToNextBigEvent > 0 && <>{weeksToNextBigEvent} weeks</>}
+              {weeksToNextBigEvent > 0 && daysToNextBigEvent > 0 && <> and </>}
+              {daysToNextBigEvent > 0 && <>{daysToNextBigEvent} days</>} remaining to {nextBigEvent}
             </em>
           </p>
 
