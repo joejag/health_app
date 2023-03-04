@@ -34,33 +34,49 @@ export interface HistoricalDate {
   result: DecoratedHealthResult
 }
 
+interface State {
+  bmr: number
+  celebrate: boolean
+  futureEstimates: Estimate[]
+  zippedHealthResults: [DecoratedHealthResult, DecoratedHealthResult[]][]
+}
+
+const DEFAULT_STATE: State = {
+  bmr: 2000,
+  celebrate: false,
+  futureEstimates: [],
+  zippedHealthResults: [],
+}
+
 function App() {
   const { width, height } = useWindowSize()
   const [healthResults, setHealthResults] = React.useState<DecoratedHealthResult[]>([])
-
-  const zippedHealthResults = healthResults.map((e: any, i: number) => {
-    return [e, healthResults.slice(i + 1)]
-  })
-
-  let celebration = false
-  let bmr = 2000
-  let futureEstimates: Estimate[] = []
-  if (healthResults.length > 0) {
-    const { isDropInFat, isDropInWeight } = judgeDay(zippedHealthResults[0][0], zippedHealthResults[0][1])
-    celebration = isDropInFat || isDropInWeight
-
-    bmr = baseMetabolicRate(healthResults[healthResults.length - 1].totalWeight)
-    futureEstimates = estimate(healthResults[healthResults.length - 1])
-  }
+  const [state, setState] = React.useState(DEFAULT_STATE)
 
   React.useEffect(() => {
     const firstDayOfTheMonth = `${TODAY.getFullYear()}-${(TODAY.getMonth() + 1).toString().padStart(2, '0')}-01`
-    fetchData(setHealthResults, firstDayOfTheMonth)
+    fetchData((results: DecoratedHealthResult[]) => {
+      const zippedHealthResults: [DecoratedHealthResult, DecoratedHealthResult[]][] = results.map((h: DecoratedHealthResult, i: number) => {
+        return [h, results.slice(i + 1)]
+      })
+      const { celebrate } = judgeDay(zippedHealthResults[0][0], zippedHealthResults[0][1])
+
+      setState({
+        bmr: baseMetabolicRate(results[results.length - 1].totalWeight),
+        celebrate,
+        futureEstimates: estimate(results[results.length - 1]),
+        zippedHealthResults,
+      })
+
+      setHealthResults(results)
+    }, firstDayOfTheMonth)
   }, [])
+
+  const { bmr, celebrate, futureEstimates, zippedHealthResults } = state
 
   return (
     <main>
-      {celebration && <Confetti width={width} height={height} opacity={0.5} />}
+      {celebrate && <Confetti width={width} height={height} opacity={0.5} />}
 
       {healthResults.length > 0 && (
         <>
@@ -127,7 +143,13 @@ const NextBigEvent = () => {
   )
 }
 
-const CurrentMonth = ({ zippedHealthResults, bmr }: { zippedHealthResults: any[][]; bmr: number }) => {
+const CurrentMonth = ({
+  zippedHealthResults,
+  bmr,
+}: {
+  zippedHealthResults: [DecoratedHealthResult, DecoratedHealthResult[]][]
+  bmr: number
+}) => {
   const currentMonth = TODAY.toLocaleString('default', { month: 'long' })
 
   return (
@@ -159,8 +181,8 @@ const CurrentMonth = ({ zippedHealthResults, bmr }: { zippedHealthResults: any[]
   )
 }
 
-const DayReport = ({ result, previous, bmr }: { result: DecoratedHealthResult; previous: [DecoratedHealthResult]; bmr: number }) => {
-  const { isDropInFat, isDropInWeight } = judgeDay(result, previous)
+const DayReport = ({ result, previous, bmr }: { result: DecoratedHealthResult; previous: DecoratedHealthResult[]; bmr: number }) => {
+  const { celebrate, isDropInFat, isDropInWeight } = judgeDay(result, previous)
   const dayOfTheWeek = new Date(result.date).toLocaleString('default', { weekday: 'short' })
 
   return (
@@ -181,7 +203,7 @@ const DayReport = ({ result, previous, bmr }: { result: DecoratedHealthResult; p
         </td>
       </tr>
 
-      {(isDropInWeight || isDropInFat) && (
+      {celebrate && (
         <tr>
           <td colSpan={3}>
             {isDropInWeight && <img src="/images/tada1.png" height="100px" alt="" />}
@@ -206,7 +228,7 @@ const Historical = () => {
   React.useEffect(() => {
     setHistoricalWeights([])
     datesOfInterest.forEach((d) => {
-      fetchHistorical((result: any) => {
+      fetchHistorical((result: DecoratedHealthResult) => {
         setHistoricalWeights((c) => [{ ...d, result }, ...c])
       }, d.when)
     })

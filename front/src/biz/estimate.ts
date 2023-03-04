@@ -1,4 +1,3 @@
-import { HistoricalDate } from '../App'
 import { DecoratedHealthResult, FAT_LOSS_GOAL } from './logic'
 
 const datesOfInterest = [
