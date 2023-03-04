@@ -23,8 +23,8 @@ export interface Estimate {
 }
 
 export const estimate = (latest: DecoratedHealthResult): Estimate[] => {
-  const total = latest.totalWeight
-  const fat = latest.fat
+  const total = Math.round(latest.totalWeight)
+  const fat = Math.round(latest.fat)
   let monthsSince = 0
 
   const estimates = datesOfInterest.map((doi) => {
