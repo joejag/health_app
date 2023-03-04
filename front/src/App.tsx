@@ -6,7 +6,7 @@ import Confetti from 'react-confetti'
 import { Estimate, estimate } from './biz/estimate'
 import { fetchData, fetchHistorical } from './biz/fetchData'
 import { judgeDay } from './biz/judge'
-import { calculations, DecoratedHealthResult } from './biz/logic'
+import { baseMetabolicRate, calculations, DecoratedHealthResult } from './biz/logic'
 
 const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 
@@ -73,8 +73,10 @@ function App() {
 
   const historicalSorted = historicalWeights.sort((h1, h2) => (h1.when > h2.when ? -1 : 1))
   let futureEstimates: Estimate[] = []
+  let bmr = 2000
   if (historicalSorted.length > 0) {
     futureEstimates = estimate(historicalSorted[0])
+    bmr = baseMetabolicRate(historicalSorted[0].result.total)
   }
 
   return (
@@ -111,7 +113,7 @@ function App() {
             </em>
           </p>
 
-          <h3>This Month</h3>
+          <h3>This Month - BMR {bmr}</h3>
 
           <table>
             <thead>
@@ -127,7 +129,7 @@ function App() {
             </thead>
             <tbody>
               {zippedItems.map((result: any) => (
-                <Row result={result[0]} previous={result[1]} key={result[0].date} />
+                <Row result={result[0]} previous={result[1]} key={result[0].date} bmr={bmr} />
               ))}
             </tbody>
           </table>
@@ -206,7 +208,7 @@ function App() {
   )
 }
 
-const Row = ({ result, previous }: { result: DecoratedHealthResult; previous: [DecoratedHealthResult] }) => {
+const Row = ({ result, previous, bmr }: { result: DecoratedHealthResult; previous: [DecoratedHealthResult]; bmr: number }) => {
   const { isDropInFat, isDropInWeight } = judgeDay(result, previous)
 
   return (
@@ -222,7 +224,9 @@ const Row = ({ result, previous }: { result: DecoratedHealthResult; previous: [D
           <br />
           <span className={`fat ${result.fatColor}`}>{result.fat}</span> + <span>{result.lean}</span>
         </td>
-        <td>{result.ate}</td>
+        <td>
+          <span className={result.ate < bmr ? 'green' : 'red'}>{result.ate}</span>
+        </td>
       </tr>
       {(isDropInWeight || isDropInFat) && (
         <tr>

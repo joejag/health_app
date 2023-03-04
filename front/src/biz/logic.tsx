@@ -1,5 +1,5 @@
 export interface HealthResult {
-  ate: string
+  ate: number
   date: string
   fat: number
   lean: number
@@ -116,4 +116,16 @@ export const decorate = (input: HealthResult[]): DecoratedHealthResult[] => {
   }
 
   return result
+}
+
+export const baseMetabolicRate = (weight: number) => {
+  const age = calculateAge(new Date(1982, 4, 20))
+  const size = 174
+  return Math.round(10 * weight + 6.25 * size - 5 * age + 5)
+}
+
+function calculateAge(birthday: any) {
+  var ageDifMs = Date.now() - birthday
+  var ageDate = new Date(ageDifMs)
+  return Math.abs(ageDate.getUTCFullYear() - 1970)
 }
