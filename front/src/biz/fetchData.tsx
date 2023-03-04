@@ -33,7 +33,7 @@ export const fetchHistorical = (setItems: Function, when: string[]) => {
     .then((res) => res.json())
     .then(
       (result: any) => {
-        setItems(decorate(result))
+        setItems(result)
       },
       (error) => {
         console.log(error)
