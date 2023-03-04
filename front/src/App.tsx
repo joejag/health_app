@@ -2,6 +2,7 @@ import './App.css'
 
 import React from 'react'
 import Confetti from 'react-confetti'
+import { SpinnerCircular } from 'spinners-react'
 
 import { Estimate, estimate } from './biz/estimate'
 import { fetchData, fetchHistorical } from './biz/fetchData'
@@ -83,11 +84,16 @@ function App() {
           <ProgressSummary healthResults={healthResults} />
           <NextBigEvent />
           <CurrentMonth zippedHealthResults={zippedHealthResults} bmr={bmr} />
+          <Historical />
+          <Estimates futureEstimates={futureEstimates} />
         </>
       )}
+      {healthResults.length === 0 && (
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <SpinnerCircular />
+        </div>
+      )}
 
-      <Historical />
-      <Estimates futureEstimates={futureEstimates} />
       <div style={{ marginTop: '3em' }}>&nbsp;</div>
     </main>
   )
