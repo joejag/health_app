@@ -2,7 +2,7 @@ import './App.css'
 
 import React from 'react'
 import Confetti from 'react-confetti'
-import { SpinnerCircular } from 'spinners-react'
+import { SpinnerRoundOutlined } from 'spinners-react'
 
 import { Estimate, estimate } from './biz/estimate'
 import { fetchData, fetchHistorical } from './biz/fetchData'
@@ -89,8 +89,18 @@ function App() {
         </>
       )}
       {healthResults.length === 0 && (
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-          <SpinnerCircular />
+        <div
+          style={{
+            width: '100%',
+            height: '300px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <div>
+            <SpinnerRoundOutlined />
+          </div>
         </div>
       )}
 
