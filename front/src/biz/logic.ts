@@ -18,15 +18,18 @@ export interface HealthCalculations {
   currentWeight: number
   periodProgress: number
   amountLeftToLose: number
-  daysToNextBigEvent: number
-  weeksToNextBigEvent: number
-  nextBigEvent: string
   fatLossProgress: number
   desiredWeight: number
 }
 
+export interface NextBigEventDetails {
+  daysToNextBigEvent: number
+  weeksToNextBigEvent: number
+  nextBigEvent: string
+}
+
 // CONFIG BLOCK
-const FAT_LOSS_GOAL = 3 // kgs
+export const FAT_LOSS_GOAL = 3 // kgs
 const NEXT_BIG_EVENT = 'Morocco Trek'
 const NEXT_BIG_EVENT_DATE = new Date(2023, 3 - 1, 10)
 // const NEXT_BIG_EVENT = 'West Highland Way'
@@ -36,27 +39,10 @@ function getDaysInCurrentMonth() {
   return new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).getDate()
 }
 
-export const calculations = (items: DecoratedHealthResult[]): HealthCalculations => {
-  if (items.length === 0) {
-    return {
-      amountLost: 0,
-      startWeight: 0,
-      currentWeight: 0,
-      amountLeftToLose: 0,
-      daysToNextBigEvent: 0,
-      weeksToNextBigEvent: 0,
-      nextBigEvent: '',
-      fatLossProgress: 0,
-      periodProgress: 0,
-      desiredWeight: 0,
-    }
-  }
-
+export const calculateProgress = (items: DecoratedHealthResult[]): HealthCalculations => {
   const dataToday = items[0]
   const dataAtStart = items[items.length - 1]
 
-  const weeksToNextBigEvent = daysTo(NEXT_BIG_EVENT_DATE) / 7
-  const daysToNextBigEvent = daysTo(NEXT_BIG_EVENT_DATE) % 7
   const desiredWeight = dataAtStart.fat - FAT_LOSS_GOAL
   const amountLost = dataToday.fat - dataAtStart.fat
   const amountLeftToLose = dataToday.fat - desiredWeight > 0 ? dataToday.fat - desiredWeight : 0
@@ -64,9 +50,6 @@ export const calculations = (items: DecoratedHealthResult[]): HealthCalculations
   const periodProgress = daysTo(new Date(dataAtStart.date)) / getDaysInCurrentMonth()
 
   return {
-    weeksToNextBigEvent: Math.floor(weeksToNextBigEvent),
-    daysToNextBigEvent: daysToNextBigEvent,
-    nextBigEvent: NEXT_BIG_EVENT,
     startWeight: dataAtStart.fat,
     currentWeight: dataToday.fat,
     desiredWeight: Math.round(desiredWeight * 10) / 10,
@@ -74,6 +57,17 @@ export const calculations = (items: DecoratedHealthResult[]): HealthCalculations
     amountLeftToLose: Math.round(amountLeftToLose * 10) / 10,
     fatLossProgress: Math.round(fatLossProgress * 100),
     periodProgress: Math.round(periodProgress * 100),
+  }
+}
+
+export const nextBigEventDates = (): NextBigEventDetails => {
+  const weeksToNextBigEvent = daysTo(NEXT_BIG_EVENT_DATE) / 7
+  const daysToNextBigEvent = daysTo(NEXT_BIG_EVENT_DATE) % 7
+
+  return {
+    weeksToNextBigEvent: Math.floor(weeksToNextBigEvent),
+    daysToNextBigEvent: daysToNextBigEvent,
+    nextBigEvent: NEXT_BIG_EVENT,
   }
 }
 

@@ -1,4 +1,5 @@
 import { HistoricalDate } from '../App'
+import { DecoratedHealthResult, FAT_LOSS_GOAL } from './logic'
 
 const datesOfInterest = [
   { when: '2023-01-01', label: 'Jan 2023' },
@@ -15,8 +16,6 @@ const datesOfInterest = [
   { when: '2023-12-01', label: 'Dec 2023' },
 ].filter((doi) => new Date(doi.when) > new Date())
 
-const LOSS_RATE = 3
-
 export interface Estimate {
   when: string
   label: string
@@ -24,14 +23,14 @@ export interface Estimate {
   fat: number
 }
 
-export const estimate = (latest: HistoricalDate): Estimate[] => {
-  const total = latest.result.total
-  const fat = latest.result.fat
+export const estimate = (latest: DecoratedHealthResult): Estimate[] => {
+  const total = latest.totalWeight
+  const fat = latest.fat
   let monthsSince = 0
 
   const estimates = datesOfInterest.map((doi) => {
     monthsSince++
-    return { ...doi, total: total - LOSS_RATE * monthsSince, fat: fat - LOSS_RATE * monthsSince }
+    return { ...doi, total: total - FAT_LOSS_GOAL * monthsSince, fat: fat - FAT_LOSS_GOAL * monthsSince }
   })
 
   return estimates.filter((est) => est.fat > 18)

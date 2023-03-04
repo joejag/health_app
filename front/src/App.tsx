@@ -6,11 +6,12 @@ import Confetti from 'react-confetti'
 import { Estimate, estimate } from './biz/estimate'
 import { fetchData, fetchHistorical } from './biz/fetchData'
 import { judgeDay } from './biz/judge'
-import { baseMetabolicRate, calculations, DecoratedHealthResult } from './biz/logic'
+import {
+    baseMetabolicRate, calculateProgress, DecoratedHealthResult, nextBigEventDates
+} from './biz/logic'
+import { useWindowSize } from './components/useWindowSize'
 
-const today = new Date()
-const month = today.toLocaleString('default', { month: 'long' })
-const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+const TODAY = new Date()
 
 const datesOfInterest = [
   { when: '2023-01-01', label: 'Jan 2023' },
@@ -35,13 +36,174 @@ export interface HistoricalDate {
 
 function App() {
   const { width, height } = useWindowSize()
-  const [items, setItems] = React.useState<DecoratedHealthResult[]>([])
-  const [historicalWeights, setHistoricalWeights] = React.useState<HistoricalDate[]>([])
+  const [healthResults, setHealthResults] = React.useState<DecoratedHealthResult[]>([])
+
+  const zippedHealthResults = healthResults.map((e: any, i: number) => {
+    return [e, healthResults.slice(i + 1)]
+  })
+
+  let celebration = false
+  let bmr = 2000
+  let futureEstimates: Estimate[] = []
+  if (healthResults.length > 0) {
+    const { isDropInFat, isDropInWeight } = judgeDay(zippedHealthResults[0][0], zippedHealthResults[0][1])
+    celebration = isDropInFat || isDropInWeight
+
+    bmr = baseMetabolicRate(healthResults[healthResults.length - 1].totalWeight)
+    futureEstimates = estimate(healthResults[healthResults.length - 1])
+  }
 
   React.useEffect(() => {
-    const firstDay = `${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, '0')}-01`
-    fetchData(setItems, firstDay)
+    const firstDayOfTheMonth = `${TODAY.getFullYear()}-${(TODAY.getMonth() + 1).toString().padStart(2, '0')}-01`
+    fetchData(setHealthResults, firstDayOfTheMonth)
+  }, [])
 
+  return (
+    <main>
+      {celebration && <Confetti width={width} height={height} opacity={0.5} />}
+
+      {healthResults.length > 0 && (
+        <>
+          <ProgressSummary healthResults={healthResults} />
+          <NextBigEvent />
+          <CurrentMonth zippedHealthResults={zippedHealthResults} bmr={bmr} />
+        </>
+      )}
+
+      <Historical />
+      <Estimates futureEstimates={futureEstimates} />
+      <div style={{ marginTop: '3em' }}>&nbsp;</div>
+    </main>
+  )
+}
+
+const ProgressSummary = ({ healthResults }: { healthResults: DecoratedHealthResult[] }) => {
+  const { startWeight, currentWeight, amountLost, amountLeftToLose, fatLossProgress, periodProgress, desiredWeight } =
+    calculateProgress(healthResults)
+
+  return (
+    <>
+      <div className="progress-container tooltip">
+        <div className="progress-bar">
+          <span
+            className="progress-bar-fill"
+            style={{
+              width: `${fatLossProgress > 100 ? 100 : fatLossProgress}%`,
+            }}
+          ></span>
+          <span className="tooltiptext">{fatLossProgress}% fat lost</span>
+        </div>
+      </div>
+
+      <div className="progress-container tooltip">
+        <div className="progress-bar">
+          <span className="progress-bar-fill-days" style={{ width: `${periodProgress > 100 ? 100 : periodProgress}%` }}></span>
+          <span className="tooltiptext">{periodProgress}% into time period</span>
+        </div>
+      </div>
+
+      <h3 className="justify" style={{ marginTop: '0.2em' }}>
+        {startWeight}kg | <span className="green">{amountLost}kg</span> | <span className={`fat`}>{currentWeight}kg</span> |{' '}
+        <span className="red">{amountLeftToLose}kg</span> | {desiredWeight}
+        kg
+      </h3>
+    </>
+  )
+}
+
+const NextBigEvent = () => {
+  const { daysToNextBigEvent, weeksToNextBigEvent, nextBigEvent } = nextBigEventDates()
+
+  return (
+    <>
+      <p className="target-date">
+        <em>
+          {weeksToNextBigEvent > 0 && <>{weeksToNextBigEvent} weeks</>}
+          {weeksToNextBigEvent > 0 && daysToNextBigEvent > 0 && <> and </>}
+          {daysToNextBigEvent > 0 && <>{daysToNextBigEvent} days</>} until {nextBigEvent}
+        </em>
+      </p>
+    </>
+  )
+}
+
+const CurrentMonth = ({ zippedHealthResults, bmr }: { zippedHealthResults: any[][]; bmr: number }) => {
+  const currentMonth = TODAY.toLocaleString('default', { month: 'long' })
+
+  return (
+    <>
+      <h2>
+        {currentMonth} - BMR {bmr}
+      </h2>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>
+              Weight
+              <br />
+              (Fat + Lean)
+            </th>
+            <th>Calories</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {zippedHealthResults.map((result) => (
+            <DayReport result={result[0]} previous={result[1]} key={result[0].date} bmr={bmr} />
+          ))}
+        </tbody>
+      </table>
+    </>
+  )
+}
+
+const DayReport = ({ result, previous, bmr }: { result: DecoratedHealthResult; previous: [DecoratedHealthResult]; bmr: number }) => {
+  const { isDropInFat, isDropInWeight } = judgeDay(result, previous)
+  const dayOfTheWeek = new Date(result.date).toLocaleString('default', { weekday: 'short' })
+
+  return (
+    <>
+      <tr>
+        <td>
+          {dayOfTheWeek}
+          <br />
+          {result.date}
+        </td>
+        <td>
+          <span className={result.weightColor}>{result.totalWeight}</span>
+          <br />
+          <span className={`fat ${result.fatColor}`}>{result.fat}</span> + <span>{result.lean}</span>
+        </td>
+        <td>
+          <span className={result.ate < bmr ? 'green' : 'red'}>{result.ate}</span>
+        </td>
+      </tr>
+
+      {(isDropInWeight || isDropInFat) && (
+        <tr>
+          <td colSpan={3}>
+            {isDropInWeight && <img src="/images/tada1.png" height="100px" alt="" />}
+            {isDropInFat && <img src="/images/tada2.webp" height="100px" alt="" />}
+
+            <br />
+
+            {isDropInWeight && isDropInFat && <strong> Weight &amp; Fat drop </strong>}
+            {isDropInWeight && !isDropInFat && <strong>Weight drop</strong>}
+            {isDropInFat && !isDropInWeight && <strong>Fat drop</strong>}
+          </td>
+        </tr>
+      )}
+    </>
+  )
+}
+
+const Historical = () => {
+  const [historicalWeights, setHistoricalWeights] = React.useState<HistoricalDate[]>([])
+  const historical = historicalWeights.sort((h1, h2) => (h1.when > h2.when ? -1 : 1))
+
+  React.useEffect(() => {
     setHistoricalWeights([])
     datesOfInterest.forEach((d) => {
       fetchHistorical((result: any) => {
@@ -50,121 +212,9 @@ function App() {
     })
   }, [])
 
-  const {
-    startWeight,
-    currentWeight,
-    amountLost,
-    amountLeftToLose,
-    daysToNextBigEvent,
-    weeksToNextBigEvent,
-    nextBigEvent,
-    fatLossProgress,
-    periodProgress,
-    desiredWeight,
-  } = calculations(items)
-
-  const zippedItems = items.map((e: any, i: number) => {
-    return [e, items.slice(i + 1)]
-  })
-
-  let celebration = false
-  if (items.length > 0) {
-    const { isDropInFat, isDropInWeight } = judgeDay(zippedItems[0][0], zippedItems[0][1])
-    celebration = isDropInFat || isDropInWeight
-  }
-
-  const historicalSorted = historicalWeights.sort((h1, h2) => (h1.when > h2.when ? -1 : 1))
-  let futureEstimates: Estimate[] = []
-  let bmr = 2000
-  if (historicalSorted.length > 0) {
-    futureEstimates = estimate(historicalSorted[0])
-    bmr = baseMetabolicRate(historicalSorted[0].result.total)
-  }
-
   return (
-    <main>
-      {celebration && <Confetti width={width} height={height} opacity={0.5} />}
-      <div className="progress-container tooltip">
-        <div className="progress-bar">
-          <span
-            className="progress-bar-fill "
-            style={{
-              width: `${fatLossProgress > 100 ? 100 : fatLossProgress}%`,
-            }}
-          ></span>
-          <span className="tooltiptext">{fatLossProgress}% fat lost</span>
-        </div>
-      </div>
-      <div className="progress-container tooltip">
-        <div className="progress-bar">
-          <span className="progress-bar-fill-days" style={{ width: `${periodProgress > 100 ? 100 : periodProgress}%` }}></span>
-          <span className="tooltiptext">{periodProgress}% into time period</span>
-        </div>
-      </div>
-
-      {items.length > 0 && (
-        <>
-          <h3 className="justify" style={{ marginTop: '0.2em' }}>
-            {startWeight}kg | <span className="green">{amountLost}kg</span> | <span className={`fat`}>{currentWeight}kg</span> |{' '}
-            <span className="red">{amountLeftToLose}kg</span> | {desiredWeight}
-            kg
-          </h3>
-          <p className="target-date">
-            <em>
-              {weeksToNextBigEvent > 0 && <>{weeksToNextBigEvent} weeks</>}
-              {weeksToNextBigEvent > 0 && daysToNextBigEvent > 0 && <> and </>}
-              {daysToNextBigEvent > 0 && <>{daysToNextBigEvent} days</>} until {nextBigEvent}
-            </em>
-          </p>
-
-          <h2>
-            {month} - BMR {bmr}
-          </h2>
-
-          <table>
-            <thead>
-              <tr>
-                <th>Date</th>
-                <th>
-                  Weight
-                  <br />
-                  (Fat + Lean)
-                </th>
-                <th>Calories</th>
-              </tr>
-            </thead>
-            <tbody>
-              {zippedItems.map((result: any) => (
-                <Row result={result[0]} previous={result[1]} key={result[0].date} bmr={bmr} />
-              ))}
-            </tbody>
-          </table>
-        </>
-      )}
-
-      <h2>Estimate to 20kg fat</h2>
-
-      <table>
-        <thead>
-          <tr className="estimate">
-            <th>When</th>
-            <th>Weight</th>
-            <th>Fat</th>
-          </tr>
-        </thead>
-        <tbody className="estimate">
-          {futureEstimates.map((est) => (
-            <tr key={est.when}>
-              <td>{est.label}</td>
-              <td>{est.total}kg</td>
-              <td>{est.fat}kg</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-
+    <>
       <h2>Historical</h2>
-
       <table>
         <thead>
           <tr className="past">
@@ -175,12 +225,12 @@ function App() {
           </tr>
         </thead>
         <tbody className="past">
-          {historicalSorted.map((doi) => (
-            <tr key={doi.when}>
-              <td>{doi.label}</td>
+          {historical.map((day) => (
+            <tr key={day.when}>
+              <td>{day.label}</td>
               <td>-</td>
-              <td>{doi.result.total}kg</td>
-              <td>{doi.result.fat}kg</td>
+              <td>{day.result.total}kg</td>
+              <td>{day.result.fat}kg</td>
             </tr>
           ))}
           <tr>
@@ -209,65 +259,34 @@ function App() {
           </tr>
         </tbody>
       </table>
-      <div style={{ marginTop: '3em' }}>&nbsp;</div>
-    </main>
-  )
-}
-
-const Row = ({ result, previous, bmr }: { result: DecoratedHealthResult; previous: [DecoratedHealthResult]; bmr: number }) => {
-  const { isDropInFat, isDropInWeight } = judgeDay(result, previous)
-
-  return (
-    <>
-      <tr>
-        <td>
-          {days[new Date(result.date).getDay()]}
-          <br />
-          {result.date}
-        </td>
-        <td>
-          <span className={result.weightColor}>{result.totalWeight}</span>
-          <br />
-          <span className={`fat ${result.fatColor}`}>{result.fat}</span> + <span>{result.lean}</span>
-        </td>
-        <td>
-          <span className={result.ate < bmr ? 'green' : 'red'}>{result.ate}</span>
-        </td>
-      </tr>
-      {(isDropInWeight || isDropInFat) && (
-        <tr>
-          <td colSpan={3}>
-            {isDropInWeight && <img src="/images/tada1.png" height="100px" alt="" />}
-            {isDropInFat && <img src="/images/tada2.webp" height="100px" alt="" />}
-
-            <br />
-
-            {isDropInWeight && isDropInFat && <strong> Weight &amp; Fat drop </strong>}
-            {isDropInWeight && !isDropInFat && <strong>Weight drop</strong>}
-            {isDropInFat && !isDropInWeight && <strong>Fat drop</strong>}
-          </td>
-        </tr>
-      )}
     </>
   )
 }
 
-const useWindowSize = () => {
-  const [windowSize, setWindowSize] = React.useState({
-    width: window.innerWidth,
-    height: window.innerHeight,
-  })
-
-  React.useEffect(() => {
-    window.addEventListener('resize', resizeHandler)
-    return () => {
-      window.removeEventListener('resize', resizeHandler)
-    }
-  }, [])
-  const resizeHandler = () => {
-    setWindowSize({ width: window.innerWidth, height: window.innerHeight })
-  }
-  return windowSize
+const Estimates = ({ futureEstimates }: { futureEstimates: Estimate[] }) => {
+  return (
+    <>
+      <h2>Estimate to 20kg fat</h2>
+      <table>
+        <thead>
+          <tr className="estimate">
+            <th>When</th>
+            <th>Weight</th>
+            <th>Fat</th>
+          </tr>
+        </thead>
+        <tbody className="estimate">
+          {futureEstimates.map((est) => (
+            <tr key={est.when}>
+              <td>{est.label}</td>
+              <td>{est.total}kg</td>
+              <td>{est.fat}kg</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </>
+  )
 }
 
 export default App
