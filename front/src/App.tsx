@@ -91,8 +91,8 @@ function App() {
       {healthResults.length === 0 && (
         <div
           style={{
-            width: '100%',
-            height: '300px',
+            width,
+            height,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
