@@ -4,11 +4,8 @@ help:
 front-start: ## Start front
 	cd front && npm start
 
-front-deploy: ## Deploy front
-	(cd front && npm run deploy)
-
 back-start: ## Start back
 	cd back/src && python3 local_server.py
 
 back-deploy: ## Deploy back
-	(cd back && terraform apply -auto-approve)
+	cd back && terraform apply -auto-approve
