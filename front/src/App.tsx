@@ -239,7 +239,7 @@ const Historical = () => {
   const [historicalWeights, setHistoricalWeights] = React.useState<any[]>([])
 
   React.useEffect(() => {
-    const dates = datesOfInterest.map((d) => d.when).reverse()
+    const dates = datesOfInterest.map((d) => d.when)
     fetchHistorical(setHistoricalWeights, dates)
   }, [])
 
@@ -256,25 +256,11 @@ const Historical = () => {
           </tr>
         </thead>
         <tbody className="past">
-          {historicalWeights.map((day) => (
-            <tr key={day.date}>
-              <td>{new Date(day.date).toLocaleString('default', { month: 'short', year: 'numeric' })}</td>
-              <td>-</td>
-              <td>{day.total}kg</td>
-              <td>{day.fat}kg</td>
-            </tr>
-          ))}
           <tr>
-            <td>Jul 2022</td>
-            <td>Iceland</td>
-            <td>96kg</td>
-            <td>34kg</td>
-          </tr>
-          <tr>
-            <td>Apr 2022</td>
-            <td>RRW</td>
-            <td>89kg</td>
-            <td>27kg</td>
+            <td>Sep 2020</td>
+            <td>Ben More</td>
+            <td>80kg</td>
+            <td>19kg</td>
           </tr>
           <tr>
             <td>May 2021</td>
@@ -283,11 +269,26 @@ const Historical = () => {
             <td>21kg</td>
           </tr>
           <tr>
-            <td>Sep 2020</td>
-            <td>Ben More</td>
-            <td>80kg</td>
-            <td>19kg</td>
+            <td>Apr 2022</td>
+            <td>RRW</td>
+            <td>89kg</td>
+            <td>27kg</td>
           </tr>
+          <tr>
+            <td>Jul 2022</td>
+            <td>Iceland</td>
+            <td>96kg</td>
+            <td>34kg</td>
+          </tr>
+
+          {historicalWeights.map((day) => (
+            <tr key={day.date}>
+              <td>{new Date(day.date).toLocaleString('default', { month: 'short', year: 'numeric' })}</td>
+              <td>-</td>
+              <td>{day.total}kg</td>
+              <td>{day.fat}kg</td>
+            </tr>
+          ))}
         </tbody>
       </table>
     </>
