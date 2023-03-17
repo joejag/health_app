@@ -143,14 +143,16 @@ const ProgressSummary = ({ healthResults }: { healthResults: DecoratedHealthResu
 
 const NextBigEvent = () => {
   const { daysToNextBigEvent, weeksToNextBigEvent, nextBigEvent } = nextBigEventDates()
+  const weekText = weeksToNextBigEvent > 1 ? `${weeksToNextBigEvent} weeks` : '1 week'
+  const dayText = daysToNextBigEvent > 1 ? `${daysToNextBigEvent} days` : '1 day'
 
   return (
     <>
       <p className="target-date">
         <em>
-          {weeksToNextBigEvent > 0 && <>{weeksToNextBigEvent} weeks</>}
+          {weeksToNextBigEvent > 0 && <>{weekText}</>}
           {weeksToNextBigEvent > 0 && daysToNextBigEvent > 0 && <> and </>}
-          {daysToNextBigEvent > 0 && <>{daysToNextBigEvent} days</>} until {nextBigEvent}
+          {daysToNextBigEvent > 0 && <>{dayText}</>} until {nextBigEvent}
         </em>
       </p>
     </>
