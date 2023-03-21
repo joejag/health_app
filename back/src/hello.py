@@ -146,14 +146,14 @@ def fetch(client, d_from):
             total_weight = round(day["w"]["total"], 1)
             lean = round(day["w"]["lean"], 1)
             fat = round(day["w"]["fat"], 1)
-        result.append(
-            {
-                "date": dateTime,
-                "totalWeight": total_weight,
-                "lean": lean,
-                "fat": fat,
-                "ate": day["c"]["value"],
-            }
-        )
+            result.append(
+                {
+                    "date": dateTime,
+                    "totalWeight": total_weight,
+                    "lean": lean,
+                    "fat": fat,
+                    "ate": day["c"]["value"],
+                }
+            )
 
     return sorted(result, key=lambda r: r["date"])
