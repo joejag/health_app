@@ -30,8 +30,8 @@ export interface NextBigEventDetails {
 
 // CONFIG BLOCK
 export const FAT_LOSS_GOAL = 3 // kgs
-const NEXT_BIG_EVENT = 'Principal Offsite'
-const NEXT_BIG_EVENT_DATE = new Date(2023, 4 - 1, 25)
+const NEXT_BIG_EVENT = 'West Highland Way'
+const NEXT_BIG_EVENT_DATE = new Date(2023, 5 - 1, 28)
 
 function getDaysInCurrentMonth() {
   return new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).getDate()
