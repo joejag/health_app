@@ -116,7 +116,7 @@ const ProgressSummary = ({ healthResults }: { healthResults: DecoratedHealthResu
       <div className="progress-container tooltip">
         <div className="progress-bar">
           <span
-            className="progress-bar-fill"
+            className={amountLost < 0 ? 'progress-bar-fill-loss' : 'progress-bar-fill-gain'}
             style={{
               width: `${fatLossProgress > 100 ? 100 : fatLossProgress}%`,
             }}
