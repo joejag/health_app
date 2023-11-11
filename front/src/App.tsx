@@ -11,6 +11,7 @@ import { judgeDay } from './biz/judge'
 import {
     baseMetabolicRate, calculateProgress, DecoratedHealthResult, nextBigEventDates
 } from './biz/logic'
+import { Blocks } from './components/Blocks'
 import { useWindowSize } from './components/useWindowSize'
 
 const TODAY = new Date()
@@ -67,6 +68,7 @@ function App() {
 
       {healthResults.length > 0 && (
         <>
+          <Blocks healthResults={healthResults} bmr={state.bmr} />
           <ProgressSummary healthResults={healthResults} />
           <NextBigEvent />
           <CurrentMonth zippedHealthResults={zippedHealthResults} bmr={bmr} />

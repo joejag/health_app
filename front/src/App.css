@@ -150,3 +150,16 @@ tbody tr:last-of-type {
 .previous-weights {
   padding-bottom: 3em;
 }
+
+.vertical-container {
+  display: flex;
+  flex-direction: column;
+  margin-top: 5px;
+}
+
+.block {
+  width: 10px;
+  height: 10px;
+  margin-right: 3.3px;
+  margin-bottom: 1px;
+}
