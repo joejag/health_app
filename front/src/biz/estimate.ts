@@ -1,20 +1,36 @@
 import { FAT_LOSS_GOAL } from './config'
 import { DecoratedHealthResult } from './logic'
 
-const datesOfInterest = [
-  { when: '2023-01-01', label: 'Jan 2023' },
-  { when: '2023-02-01', label: 'Feb 2023' },
-  { when: '2023-03-01', label: 'Mar 2023' },
-  { when: '2023-04-01', label: 'Apr 2023' },
-  { when: '2023-05-01', label: 'May 2023' },
-  { when: '2023-06-01', label: 'Jun 2023' },
-  { when: '2023-07-01', label: 'Jul 2023' },
-  { when: '2023-08-01', label: 'Aug 2023' },
-  { when: '2023-09-01', label: 'Sep 2023' },
-  { when: '2023-10-01', label: 'Oct 2023' },
-  { when: '2023-11-01', label: 'Nov 2023' },
-  { when: '2023-12-01', label: 'Dec 2023' },
-].filter((doi) => new Date(doi.when) > new Date())
+export function firstOfTheMonthDatesArrayForYear(direction: number) {
+  const today = new Date()
+  const nextSixMonthsDates = []
+
+  for (let i = 0; i < 10; i++) {
+    const nextMonth = new Date(today.getFullYear(), today.getMonth() + (i + 1) * direction, 1)
+    nextSixMonthsDates.push(nextMonth)
+  }
+
+  return nextSixMonthsDates
+}
+
+export function formatDate(date: Date): string {
+  const months: string[] = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+  const month: string = months[date.getMonth()]
+  const year: number = date.getFullYear()
+  return `${month} ${year}`
+}
+
+export function formatDateToYYYYMMDD(date: Date): string {
+  const year: string = date.getFullYear().toString().padStart(4, '0')
+  const month: string = (date.getMonth() + 1).toString().padStart(2, '0') // Months are 0-based
+  const day: string = date.getDate().toString().padStart(2, '0')
+
+  return `${year}-${month}-${day}`
+}
+
+const datesOfInterest = firstOfTheMonthDatesArrayForYear(1).map((d) => {
+  return { when: formatDateToYYYYMMDD(d), label: formatDate(d) }
+})
 
 export interface Estimate {
   when: string
