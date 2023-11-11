@@ -130,7 +130,7 @@ const CurrentMonth = ({
 
         <tbody>
           {zippedHealthResults.map((result) => (
-            <DayReport result={result[0]} previous={result[1]} key={result[0].date} bmr={bmr} />
+            <DayReport result={result[0]} previous={result[1]} key={result[0].date} />
           ))}
         </tbody>
       </table>
@@ -138,7 +138,7 @@ const CurrentMonth = ({
   )
 }
 
-const DayReport = ({ result, previous, bmr }: { result: DecoratedHealthResult; previous: DecoratedHealthResult[]; bmr: number }) => {
+const DayReport = ({ result, previous }: { result: DecoratedHealthResult; previous: DecoratedHealthResult[] }) => {
   const { celebrate, isDropInFat, isDropInWeight } = judgeDay(result, previous)
   const dayOfTheWeek = new Date(result.date).toLocaleString('default', { weekday: 'short' })
 
@@ -156,7 +156,7 @@ const DayReport = ({ result, previous, bmr }: { result: DecoratedHealthResult; p
           <span className={`fat ${result.fatColor}`}>{result.fat}</span> + <span>{result.lean}</span>
         </td>
         <td>
-          <span className={result.exercise > result.ate ? 'green' : 'red'}>{result.diff}</span>
+          <span className={result.exercise - result.ate > 0 ? 'green' : 'red'}>{result.diff}</span>
           <br />
           {result.exercise} - {result.ate}
         </td>
