@@ -63,7 +63,7 @@ function App() {
 
   return (
     <main>
-      {celebrate && <Confetti width={width} height={height} opacity={0.5} />}
+      {celebrate && <Confetti width={width} height={height} opacity={0.5} numberOfPieces={1000} recycle={false} />}
 
       {healthResults.length > 0 && (
         <>
