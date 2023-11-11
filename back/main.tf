@@ -2,7 +2,7 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "~> 3.48.0"
+      version = "~> 5.0"
     }
     random = {
       source  = "hashicorp/random"
@@ -33,7 +33,7 @@ module "python_lambda_archive" {
 resource "aws_lambda_function" "weight_app" {
   function_name = "WeightApp"
 
-  runtime = "python3.8"
+  runtime = "python3.11"
   handler = "hello.lambda_handler"
 
   role = aws_iam_role.lambda_exec.arn
