@@ -12,6 +12,8 @@ import {
     baseMetabolicRate, calculateProgress, DecoratedHealthResult, nextBigEventDates
 } from './biz/logic'
 import { Blocks } from './components/Blocks'
+import { Estimates } from './components/Estimates'
+import { Historical } from './components/Historical'
 import { useWindowSize } from './components/useWindowSize'
 
 const TODAY = new Date()
@@ -90,7 +92,7 @@ function App() {
         </div>
       )}
 
-      <div style={{ marginTop: '3em' }}>&nbsp;</div>
+      <div style={{ marginTop: '1em' }}>&nbsp;</div>
     </main>
   )
 }
@@ -227,93 +229,6 @@ const DayReport = ({ result, previous, bmr }: { result: DecoratedHealthResult; p
           </td>
         </tr>
       )}
-    </>
-  )
-}
-
-const Historical = () => {
-  const [historicalWeights, setHistoricalWeights] = React.useState<any[]>([])
-
-  React.useEffect(() => {
-    const datesOfInterest = tenMonths(-1).filter((doi) => new Date(doi.when) < new Date())
-    const dates = datesOfInterest.map((d: any) => d.when)
-    fetchHistorical(setHistoricalWeights, dates)
-  }, [])
-
-  return (
-    <>
-      <h2>Historical</h2>
-      <table>
-        <thead>
-          <tr className="past">
-            <th>When</th>
-            <th>Event</th>
-            <th>Weight</th>
-            <th>Fat</th>
-          </tr>
-        </thead>
-        <tbody className="past">
-          <tr>
-            <td>Sep 2020</td>
-            <td>Ben More</td>
-            <td>80kg</td>
-            <td>19kg</td>
-          </tr>
-          <tr>
-            <td>May 2021</td>
-            <td>WHW</td>
-            <td>85kg</td>
-            <td>21kg</td>
-          </tr>
-          <tr>
-            <td>Apr 2022</td>
-            <td>RRW</td>
-            <td>89kg</td>
-            <td>27kg</td>
-          </tr>
-          <tr>
-            <td>Jul 2022</td>
-            <td>Iceland</td>
-            <td>96kg</td>
-            <td>34kg</td>
-          </tr>
-
-          {historicalWeights.map((day) => (
-            <tr key={day.date}>
-              <td>{new Date(day.date).toLocaleString('default', { month: 'short', year: 'numeric' })}</td>
-              <td>-</td>
-              <td>{day.total}kg</td>
-              <td>{day.fat}kg</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </>
-  )
-}
-
-const Estimates = ({ futureEstimates }: { futureEstimates: Estimate[] }) => {
-  return (
-    <>
-      <h2>Estimate to 20kg fat</h2>
-      <table>
-        <thead>
-          <tr className="estimate">
-            <th>When</th>
-            <th>Weight</th>
-            <th>Fat</th>
-          </tr>
-        </thead>
-        <tbody className="estimate">
-          {futureEstimates.map((est) => (
-            <tr key={est.label}>
-              <td>{est.label}</td>
-              <td>{est.total}kg</td>
-              <td>{est.fat}kg</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
     </>
   )
 }
