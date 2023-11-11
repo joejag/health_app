@@ -1,3 +1,5 @@
+import { FAT_LOSS_GOAL, NEXT_BIG_EVENT, NEXT_BIG_EVENT_DATE } from './config'
+
 export interface HealthResult {
   ate: number
   date: string
@@ -31,11 +33,6 @@ export interface NextBigEventDetails {
   weeksToNextBigEvent: number
   nextBigEvent: string
 }
-
-// CONFIG BLOCK
-export const FAT_LOSS_GOAL = 3 // kgs
-const NEXT_BIG_EVENT = 'London with Sam'
-const NEXT_BIG_EVENT_DATE = new Date(2023, 10 - 1, 28)
 
 function getDaysInCurrentMonth() {
   return new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).getDate()

@@ -1,4 +1,5 @@
-import { DecoratedHealthResult, FAT_LOSS_GOAL } from './logic'
+import { FAT_LOSS_GOAL } from './config'
+import { DecoratedHealthResult } from './logic'
 
 const datesOfInterest = [
   { when: '2023-01-01', label: 'Jan 2023' },
