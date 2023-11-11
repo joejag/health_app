@@ -2,12 +2,16 @@ export interface HealthResult {
   ate: number
   date: string
   fat: number
+  diff: number
+  exercise: number
   lean: number
   totalWeight: number
   total: number
 }
 
 export interface DecoratedHealthResult extends HealthResult {
+  diff: number
+  exercise: number
   weightColor: string
   fatColor: string
 }

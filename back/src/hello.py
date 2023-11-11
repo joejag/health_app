@@ -118,6 +118,19 @@ def fetch_calories(client, d_from, d_to):
     return count
 
 
+def fetch_exercise(client, d_from, d_to):
+    exercises = client.time_series(
+        resource="activities/log/tracker/activityCalories",
+        base_date=d_from,
+        end_date=d_to,
+    )
+
+    count = []
+    for item in exercises["activities-log-tracker-activityCalories"]:
+        count.append(item)
+    return count
+
+
 def fetch(client, d_from):
     _, end_day = calendar.monthrange(d_from.year, d_from.month)
     d_to = datetime.datetime(d_from.year, d_from.month, end_day)
@@ -126,6 +139,7 @@ def fetch(client, d_from):
 
     w = fetch_weight(client, d_from, d_to)
     c = fetch_calories(client, d_from, d_to)
+    e = fetch_exercise(client, d_from, d_to)
 
     merged = {}
     for weight in w:
@@ -138,6 +152,11 @@ def fetch(client, d_from):
         current = merged.get(dt, {})
         current["c"] = calories
         merged[dt] = current
+    for exercise in e:
+        dt = exercise["dateTime"]
+        current = merged.get(dt, {})
+        current["e"] = exercise
+        merged[dt] = current
 
     result = []
     for dateTime in merged:
@@ -146,6 +165,7 @@ def fetch(client, d_from):
             total_weight = round(day["w"]["total"], 1)
             lean = round(day["w"]["lean"], 1)
             fat = round(day["w"]["fat"], 1)
+            diff = int(float(day["c"]["value"]) - float(day["e"]["value"]))
             result.append(
                 {
                     "date": dateTime,
@@ -153,6 +173,8 @@ def fetch(client, d_from):
                     "lean": lean,
                     "fat": fat,
                     "ate": day["c"]["value"],
+                    "exercise": day["e"]["value"],
+                    "diff": diff,
                 }
             )
 

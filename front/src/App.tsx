@@ -183,7 +183,11 @@ const CurrentMonth = ({
               <br />
               (Fat + Lean)
             </th>
-            <th>Calories</th>
+            <th>
+              Calories
+              <br />
+              (Exercise - Ate)
+            </th>
           </tr>
         </thead>
 
@@ -215,7 +219,9 @@ const DayReport = ({ result, previous, bmr }: { result: DecoratedHealthResult; p
           <span className={`fat ${result.fatColor}`}>{result.fat}</span> + <span>{result.lean}</span>
         </td>
         <td>
-          <span className={result.ate < bmr ? 'green' : 'red'}>{result.ate}</span>
+          <span className={result.exercise > result.ate ? 'green' : 'red'}>{result.diff}</span>
+          <br />
+          {result.exercise} - {result.ate}
         </td>
       </tr>
 
