@@ -4,9 +4,8 @@ import React from 'react'
 import Confetti from 'react-confetti'
 import { SpinnerRoundOutlined } from 'spinners-react'
 
-import {
-    Estimate, estimate, firstOfTheMonthDatesArrayForYear, formatDate, formatDateToYYYYMMDD
-} from './biz/estimate'
+import { tenMonths } from './biz/dateRange'
+import { Estimate, estimate } from './biz/estimate'
 import { fetchData, fetchHistorical } from './biz/fetchData'
 import { judgeDay } from './biz/judge'
 import {
@@ -15,11 +14,6 @@ import {
 import { useWindowSize } from './components/useWindowSize'
 
 const TODAY = new Date()
-const datesOfInterest = firstOfTheMonthDatesArrayForYear(-1)
-  .map((d) => {
-    return { when: formatDateToYYYYMMDD(d), label: formatDate(d) }
-  })
-  .filter((doi) => new Date(doi.when) < new Date())
 
 export interface HistoricalDate {
   when: string
@@ -239,7 +233,8 @@ const Historical = () => {
   const [historicalWeights, setHistoricalWeights] = React.useState<any[]>([])
 
   React.useEffect(() => {
-    const dates = datesOfInterest.map((d) => d.when)
+    const datesOfInterest = tenMonths(-1).filter((doi) => new Date(doi.when) < new Date())
+    const dates = datesOfInterest.map((d: any) => d.when)
     fetchHistorical(setHistoricalWeights, dates)
   }, [])
 
