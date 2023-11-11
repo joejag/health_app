@@ -4,16 +4,15 @@ import React from 'react'
 import Confetti from 'react-confetti'
 import { SpinnerRoundOutlined } from 'spinners-react'
 
-import { tenMonths } from './biz/dateRange'
 import { Estimate, estimate } from './biz/estimate'
-import { fetchData, fetchHistorical } from './biz/fetchData'
+import { fetchData } from './biz/fetchData'
 import { judgeDay } from './biz/judge'
-import {
-    baseMetabolicRate, calculateProgress, DecoratedHealthResult, nextBigEventDates
-} from './biz/logic'
+import { baseMetabolicRate, DecoratedHealthResult } from './biz/logic'
 import { Blocks } from './components/Blocks'
 import { Estimates } from './components/Estimates'
 import { Historical } from './components/Historical'
+import { NextBigEvent } from './components/NextBigEvent'
+import { ProgressSummary } from './components/Progress'
 import { useWindowSize } from './components/useWindowSize'
 
 const TODAY = new Date()
@@ -94,58 +93,6 @@ function App() {
 
       <div style={{ marginTop: '1em' }}>&nbsp;</div>
     </main>
-  )
-}
-
-const ProgressSummary = ({ healthResults }: { healthResults: DecoratedHealthResult[] }) => {
-  const { startWeight, currentWeight, amountLost, amountLeftToLose, fatLossProgress, periodProgress, desiredWeight } =
-    calculateProgress(healthResults)
-
-  return (
-    <>
-      <div className="progress-container tooltip">
-        <div className="progress-bar">
-          <span
-            className={amountLost < 0 ? 'progress-bar-fill-loss' : 'progress-bar-fill-gain'}
-            style={{
-              width: `${fatLossProgress > 100 ? 100 : fatLossProgress}%`,
-            }}
-          ></span>
-          <span className="tooltiptext">{fatLossProgress}% fat lost</span>
-        </div>
-      </div>
-
-      <div className="progress-container tooltip">
-        <div className="progress-bar">
-          <span className="progress-bar-fill-days" style={{ width: `${periodProgress > 100 ? 100 : periodProgress}%` }}></span>
-          <span className="tooltiptext">{periodProgress}% into time period</span>
-        </div>
-      </div>
-
-      <h3 className="justify" style={{ marginTop: '0.2em' }}>
-        {startWeight}kg | <span className="green">{amountLost}kg</span> | <span className={`fat`}>{currentWeight}kg</span> |{' '}
-        <span className="red">{amountLeftToLose}kg</span> | {desiredWeight}
-        kg
-      </h3>
-    </>
-  )
-}
-
-const NextBigEvent = () => {
-  const { daysToNextBigEvent, weeksToNextBigEvent, nextBigEvent } = nextBigEventDates()
-  const weekText = weeksToNextBigEvent > 1 ? `${weeksToNextBigEvent} weeks` : '1 week'
-  const dayText = daysToNextBigEvent > 1 ? `${daysToNextBigEvent} days` : '1 day'
-
-  return (
-    <>
-      <p className="target-date">
-        <em>
-          {weeksToNextBigEvent > 0 && <>{weekText}</>}
-          {weeksToNextBigEvent > 0 && daysToNextBigEvent > 0 && <> and </>}
-          {daysToNextBigEvent > 0 && <>{dayText}</>} until {nextBigEvent}
-        </em>
-      </p>
-    </>
   )
 }
 
