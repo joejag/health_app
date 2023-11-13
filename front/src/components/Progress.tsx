@@ -1,8 +1,7 @@
 import { calculateProgress, DecoratedHealthResult } from '../biz/logic'
 
 export const ProgressSummary = ({ healthResults }: { healthResults: DecoratedHealthResult[] }) => {
-  const { startWeight, currentWeight, amountLost, amountLeftToLose, fatLossProgress, periodProgress, desiredWeight } =
-    calculateProgress(healthResults)
+  const { startWeight, currentWeight, amountLost, amountLeftToLose, fatLossProgress, desiredWeight } = calculateProgress(healthResults)
 
   return (
     <>
