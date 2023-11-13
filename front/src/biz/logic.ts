@@ -6,6 +6,7 @@ export interface HealthResult {
   fat: number
   diff: number
   exercise: number
+  steps: number
   lean: number
   totalWeight: number
   total: number

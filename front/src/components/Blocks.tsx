@@ -30,7 +30,7 @@ export const Blocks = ({ healthResults, bmr }: { healthResults: DecoratedHealthR
 
 const Block = ({ result, bmr, date }: { result: DecoratedHealthResult; bmr: number; date: Date }) => {
   const ateColor = bmr > result.ate ? '#009879' : '#c93402'
-  const exerciseColor = result.exercise > 1000 ? '#009879' : '#c93402'
+  const exerciseColor = result.steps > 10000 ? '#009879' : '#c93402'
   return (
     <div className="vertical-container">
       <span className="block" style={{ backgroundColor: ateColor }}>

@@ -131,6 +131,19 @@ def fetch_exercise(client, d_from, d_to):
     return count
 
 
+def fetch_steps(client, d_from, d_to):
+    exercises = client.time_series(
+        resource="activities/steps",
+        base_date=d_from,
+        end_date=d_to,
+    )
+
+    count = []
+    for item in exercises["activities-steps"]:
+        count.append(item)
+    return count
+
+
 def fetch(client, d_from):
     _, end_day = calendar.monthrange(d_from.year, d_from.month)
     d_to = datetime.datetime(d_from.year, d_from.month, end_day)
@@ -140,6 +153,7 @@ def fetch(client, d_from):
     w = fetch_weight(client, d_from, d_to)
     c = fetch_calories(client, d_from, d_to)
     e = fetch_exercise(client, d_from, d_to)
+    s = fetch_steps(client, d_from, d_to)
 
     merged = {}
     for weight in w:
@@ -157,6 +171,11 @@ def fetch(client, d_from):
         current = merged.get(dt, {})
         current["e"] = exercise
         merged[dt] = current
+    for exercise in s:
+        dt = exercise["dateTime"]
+        current = merged.get(dt, {})
+        current["s"] = exercise
+        merged[dt] = current
 
     result = []
     for dateTime in merged:
@@ -172,8 +191,9 @@ def fetch(client, d_from):
                     "totalWeight": total_weight,
                     "lean": lean,
                     "fat": fat,
-                    "ate": day["c"]["value"],
-                    "exercise": day["e"]["value"],
+                    "ate": int(day["c"]["value"]),
+                    "exercise": int(day["e"]["value"]),
+                    "steps": int(day["s"]["value"]),
                     "diff": diff,
                 }
             )

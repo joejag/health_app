@@ -34,7 +34,7 @@ resource "aws_lambda_function" "weight_app" {
   function_name = "WeightApp"
 
   runtime = "python3.11"
-  handler = "hello.lambda_handler"
+  handler = "health.lambda_handler"
 
   role = aws_iam_role.lambda_exec.arn
 
