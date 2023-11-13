@@ -155,11 +155,13 @@ tbody tr:last-of-type {
   display: flex;
   flex-direction: column;
   margin-top: 5px;
+  font-size: 0.5em;
+  text-align: center;
+  margin-right: 3.3px;
 }
 
 .block {
   width: 10px;
   height: 10px;
-  margin-right: 3.3px;
   margin-bottom: 1px;
 }
