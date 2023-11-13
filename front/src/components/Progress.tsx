@@ -18,13 +18,6 @@ export const ProgressSummary = ({ healthResults }: { healthResults: DecoratedHea
         </div>
       </div>
 
-      <div className="progress-container tooltip">
-        <div className="progress-bar">
-          <span className="progress-bar-fill-days" style={{ width: `${periodProgress > 100 ? 100 : periodProgress}%` }}></span>
-          <span className="tooltiptext">{periodProgress}% into time period</span>
-        </div>
-      </div>
-
       <h3 className="justify" style={{ marginTop: '0.2em' }}>
         {startWeight}kg | <span className="green">{amountLost}kg</span> | <span className={`fat`}>{currentWeight}kg</span> |{' '}
         <span className="red">{amountLeftToLose}kg</span> | {desiredWeight}
