@@ -1,8 +1,8 @@
-export function tenMonths(direction: number) {
+export function tenMonths(direction: number, months = 10) {
   const today = new Date()
   const result = []
 
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < months; i++) {
     const nextMonth = new Date(today.getFullYear(), today.getMonth() + (i + 1) * direction, 1)
     result.push({ when: formatDateToYYYYMMDD(nextMonth), label: formatDateToMMMYYYY(nextMonth) })
   }

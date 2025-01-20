@@ -38,6 +38,8 @@ resource "aws_lambda_function" "weight_app" {
 
   role = aws_iam_role.lambda_exec.arn
 
+  timeout = 30
+
   filename         = module.python_lambda_archive.archive_path
   source_code_hash = module.python_lambda_archive.source_code_hash
 }
