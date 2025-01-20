@@ -71,7 +71,7 @@ function App() {
         <>
           <Blocks healthResults={healthResults} bmr={state.bmr} />
           <ProgressSummary healthResults={healthResults} />
-          <NextBigEvent />
+          {/* <NextBigEvent /> */}
           <CurrentMonth zippedHealthResults={zippedHealthResults} bmr={bmr} />
           <Historical />
           <Estimates futureEstimates={futureEstimates} />
