@@ -1,7 +1,38 @@
+import { CategoryScale } from 'chart.js'
+import Chart from 'chart.js/auto'
+import React from 'react'
+import { Line } from 'react-chartjs-2'
+
 import { calculateProgress, DecoratedHealthResult } from '../biz/logic'
+
+Chart.register(CategoryScale)
 
 export const ProgressSummary = ({ healthResults }: { healthResults: DecoratedHealthResult[] }) => {
   const { startWeight, currentWeight, amountLost, amountLeftToLose, fatLossProgress, desiredWeight } = calculateProgress(healthResults)
+
+  const [chartData, setChartData] = React.useState<any>()
+  React.useEffect(() => {
+    const labels = healthResults
+      .slice()
+      .reverse()
+      .map((day) => day.date.split('-')[2])
+    const data = healthResults
+      .slice()
+      .reverse()
+      .map((day) => day.fat)
+    setChartData({
+      labels,
+      datasets: [
+        {
+          label: 'Fat',
+          data,
+          backgroundColor: '#009879',
+          borderColor: 'black',
+          borderWidth: 1,
+        },
+      ],
+    })
+  }, [healthResults])
 
   return (
     <>
@@ -22,6 +53,8 @@ export const ProgressSummary = ({ healthResults }: { healthResults: DecoratedHea
         <span className="red">{amountLeftToLose}kg</span> | {desiredWeight}
         kg
       </h3>
+
+      {chartData && <Line data={chartData} options={{}} />}
     </>
   )
 }
