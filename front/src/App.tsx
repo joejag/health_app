@@ -11,7 +11,7 @@ import { baseMetabolicRate, DecoratedHealthResult } from './biz/logic'
 import { Blocks } from './components/Blocks'
 import { Estimates } from './components/Estimates'
 import { Historical } from './components/Historical'
-import { NextBigEvent } from './components/NextBigEvent'
+// import { NextBigEvent } from './components/NextBigEvent'
 import { ProgressSummary } from './components/Progress'
 import { useWindowSize } from './components/useWindowSize'
 
