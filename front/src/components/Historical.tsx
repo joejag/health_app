@@ -22,6 +22,12 @@ export const Historical = () => {
       .slice()
       .reverse()
       .map((day) => day.total)
+
+    // Add the BMI classification lines
+    const bmiNormalUpperLine = Array(labels.length).fill(75.3) // Upper limit of normal weight
+    const bmiOverweightUpperLine = Array(labels.length).fill(89.8) // Upper limit of overweight
+    const bmiObesityClass1UpperLine = Array(labels.length).fill(104.4) // Upper limit of obesity class 1
+
     setChartData({
       labels,
       datasets: [
@@ -31,6 +37,30 @@ export const Historical = () => {
           backgroundColor: '#095798',
           borderColor: 'black',
           borderWidth: 1,
+        },
+        {
+          label: 'Normal - 55-75',
+          data: bmiNormalUpperLine,
+          borderColor: 'green',
+          borderWidth: 2,
+          borderDash: [5, 5],
+          pointRadius: 0,
+        },
+        {
+          label: 'Overweight 75-90',
+          data: bmiOverweightUpperLine,
+          borderColor: 'orange',
+          borderWidth: 2,
+          borderDash: [5, 5],
+          pointRadius: 0,
+        },
+        {
+          label: 'Obesity 90-104',
+          data: bmiObesityClass1UpperLine,
+          borderColor: 'red',
+          borderWidth: 2,
+          borderDash: [5, 5],
+          pointRadius: 0,
         },
       ],
     })
