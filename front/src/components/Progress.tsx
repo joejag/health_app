@@ -7,19 +7,25 @@ import { calculateProgress, DecoratedHealthResult } from '../biz/logic'
 
 Chart.register(CategoryScale)
 
+const padDataToCurrentMonth = (data: any) => {
+  const now = new Date()
+  const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate()
+  return Array.from({ length: daysInMonth }, (_, i) => data[i] ?? null)
+}
+
 export const ProgressSummary = ({ healthResults }: { healthResults: DecoratedHealthResult[] }) => {
   const { startWeight, currentWeight, amountLost, amountLeftToLose, fatLossProgress, desiredWeight } = calculateProgress(healthResults)
 
   const [chartData, setChartData] = React.useState<any>()
   React.useEffect(() => {
-    const labels = healthResults
-      .slice()
-      .reverse()
-      .map((day) => day.date.split('-')[2])
-    const data = healthResults
+    const labels = Array.from({ length: new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).getDate() }, (_, i) => i + 1)
+
+    const dataKnown = healthResults
       .slice()
       .reverse()
       .map((day) => day.fat)
+    const data = padDataToCurrentMonth(dataKnown)
+
     setChartData({
       labels,
       datasets: [
@@ -29,6 +35,14 @@ export const ProgressSummary = ({ healthResults }: { healthResults: DecoratedHea
           backgroundColor: '#009879',
           borderColor: 'black',
           borderWidth: 1,
+        },
+        {
+          label: 'Goal Weight',
+          data: Array(labels.length).fill(desiredWeight), // Goal weight for every day
+          borderColor: 'red',
+          borderWidth: 2,
+          borderDash: [5, 5], // Make the line dashed
+          pointRadius: 0, // Remove points
         },
       ],
     })
