@@ -28,7 +28,7 @@ export const Estimates = ({ futureEstimates }: { futureEstimates: Estimate[] }) 
 
   return (
     <>
-      <h2>Estimate to 20kg fat</h2>
+      <h2>Estimate to 12kg fat</h2>
       {chartData && <Line data={chartData} options={{}} />}
 
       <table>

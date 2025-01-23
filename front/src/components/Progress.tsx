@@ -46,7 +46,7 @@ export const ProgressSummary = ({ healthResults }: { healthResults: DecoratedHea
         },
       ],
     })
-  }, [healthResults])
+  }, [healthResults, desiredWeight])
 
   return (
     <>

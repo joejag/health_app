@@ -21,5 +21,5 @@ export const estimate = (latest: DecoratedHealthResult): Estimate[] => {
     return { ...doi, total: total - FAT_LOSS_GOAL * monthsSince, fat: fat - FAT_LOSS_GOAL * monthsSince }
   })
 
-  return estimates.filter((est) => est.fat > 18)
+  return estimates.filter((est) => est.fat > 11)
 }
