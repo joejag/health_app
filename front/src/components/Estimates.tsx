@@ -12,6 +12,11 @@ export const Estimates = ({ futureEstimates }: { futureEstimates: Estimate[] }) 
   React.useEffect(() => {
     const labels = futureEstimates.map((day) => new Date(day.when).toLocaleString('default', { month: 'short', year: 'numeric' }))
     const data = futureEstimates.map((day) => day.fat)
+
+    const fitnessLine = Array(labels.length).fill(10)
+    const healthyLine = Array(labels.length).fill(12)
+    const tooMuchLine = Array(labels.length).fill(19)
+
     setChartData({
       labels,
       datasets: [
@@ -22,6 +27,30 @@ export const Estimates = ({ futureEstimates }: { futureEstimates: Estimate[] }) 
           borderColor: 'black',
           borderWidth: 1,
         },
+        {
+          label: 'Fitness 10-12',
+          data: fitnessLine,
+          borderColor: 'green',
+          borderWidth: 2,
+          borderDash: [5, 5],
+          pointRadius: 0,
+        },
+        {
+          label: 'Healthy 13-19',
+          data: healthyLine,
+          borderColor: 'orange',
+          borderWidth: 2,
+          borderDash: [5, 5],
+          pointRadius: 0,
+        },
+        {
+          label: 'Overweight >19',
+          data: tooMuchLine,
+          borderColor: 'red',
+          borderWidth: 2,
+          borderDash: [5, 5],
+          pointRadius: 0,
+        },
       ],
     })
   }, [futureEstimates])
@@ -29,7 +58,17 @@ export const Estimates = ({ futureEstimates }: { futureEstimates: Estimate[] }) 
   return (
     <>
       <h2>Estimate to 12kg fat</h2>
-      {chartData && <Line data={chartData} options={{}} />}
+      {chartData && (
+        <div style={{ height: '300px', width: '100%' }}>
+          <Line
+            data={chartData}
+            options={{
+              responsive: true,
+              maintainAspectRatio: false,
+            }}
+          />
+        </div>
+      )}
 
       <table>
         <thead>

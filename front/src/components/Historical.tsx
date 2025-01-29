@@ -39,7 +39,7 @@ export const Historical = () => {
           borderWidth: 1,
         },
         {
-          label: 'Normal - 64-75',
+          label: 'Normal 64-75',
           data: bmiNormalUpperLine,
           borderColor: 'green',
           borderWidth: 2,
