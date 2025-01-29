@@ -67,7 +67,7 @@ export const Historical = () => {
   }, [historicalWeights])
 
   React.useEffect(() => {
-    const datesOfInterest = tenMonths(-1, 3).filter((doi) => new Date(doi.when) < new Date())
+    const datesOfInterest = tenMonths(-1, 3, 0).filter((doi) => new Date(doi.when) < new Date())
     const dates = datesOfInterest.map((d: any) => d.when)
     dates.push('2024-09-01')
     dates.push('2023-09-01')

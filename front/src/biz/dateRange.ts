@@ -1,9 +1,9 @@
-export function tenMonths(direction: number, months = 10) {
+export function tenMonths(direction: number, months = 10, offset = 1) {
   const today = new Date()
   const result = []
 
   for (let i = 0; i < months; i++) {
-    const nextMonth = new Date(today.getFullYear(), today.getMonth() + (i + 1) * direction, 1)
+    const nextMonth = new Date(today.getFullYear(), today.getMonth() + (i + offset) * direction, 1)
     result.push({ when: formatDateToYYYYMMDD(nextMonth), label: formatDateToMMMYYYY(nextMonth) })
   }
 
