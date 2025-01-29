@@ -72,9 +72,15 @@ function App() {
           <Blocks healthResults={healthResults} bmr={state.bmr} />
           <ProgressSummary healthResults={healthResults} />
           {/* <NextBigEvent /> */}
-          <CurrentMonth zippedHealthResults={zippedHealthResults} bmr={bmr} />
-          <Historical />
-          <Estimates futureEstimates={futureEstimates} />
+          <div className="desktop-layout">
+            <div>
+              <CurrentMonth zippedHealthResults={zippedHealthResults} bmr={bmr} />
+            </div>
+            <div>
+              <Historical />
+              <Estimates futureEstimates={futureEstimates} />
+            </div>
+          </div>
         </>
       )}
       {healthResults.length === 0 && (
