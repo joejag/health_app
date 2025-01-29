@@ -82,7 +82,17 @@ export const Historical = () => {
     <>
       <h2>Historical</h2>
 
-      {chartData && <Line data={chartData} options={{}} />}
+      {chartData && (
+        <div style={{ height: '500px', width: '100%' }}>
+          <Line
+            data={chartData}
+            options={{
+              responsive: true,
+              maintainAspectRatio: false,
+            }}
+          />
+        </div>
+      )}
 
       <table>
         <thead>
