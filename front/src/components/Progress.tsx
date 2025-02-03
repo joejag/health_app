@@ -14,7 +14,7 @@ const padDataToCurrentMonth = (data: any) => {
 }
 
 export const ProgressSummary = ({ healthResults }: { healthResults: DecoratedHealthResult[] }) => {
-  const { startWeight, currentWeight, amountLost, amountLeftToLose, fatLossProgress, desiredWeight } = calculateProgress(healthResults)
+  const { startWeight, amountLost, desiredWeight } = calculateProgress(healthResults)
 
   const [chartData, setChartData] = React.useState<any>()
   React.useEffect(() => {
