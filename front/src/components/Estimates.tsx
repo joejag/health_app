@@ -28,7 +28,7 @@ export const Estimates = ({ futureEstimates }: { futureEstimates: Estimate[] }) 
           borderWidth: 1,
         },
         {
-          label: 'Fitness 10-12',
+          label: 'Fitness 10-12 (14-17%)',
           data: fitnessLine,
           borderColor: 'green',
           borderWidth: 2,
@@ -36,7 +36,7 @@ export const Estimates = ({ futureEstimates }: { futureEstimates: Estimate[] }) 
           pointRadius: 0,
         },
         {
-          label: 'Healthy 13-19',
+          label: 'Healthy 13-19 (18-24%)',
           data: healthyLine,
           borderColor: 'orange',
           borderWidth: 2,
