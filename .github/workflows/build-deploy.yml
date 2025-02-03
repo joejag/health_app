@@ -1,4 +1,4 @@
-name: Build and deploy
+name: Build and Deploy
 
 on:
   push:
@@ -10,17 +10,25 @@ on:
 
 jobs:
   build:
-    name: Build
+    name: Build Project
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Install Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: 17.x
+          node-version: 18.x
+
+      - name: Cache NPM dependencies
+        uses: actions/cache@v4
+        with:
+          path: ./front/node_modules
+          key: npm-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            npm-
 
       - name: Install NPM packages
         working-directory: ./front
@@ -37,7 +45,7 @@ jobs:
           path: ./front/build
 
   deploy:
-    name: Deploy
+    name: Deploy to GitHub Pages
     needs: build
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
