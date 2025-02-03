@@ -76,7 +76,7 @@ export const Historical = () => {
     dates.push('2022-03-01')
     dates.push('2021-09-01')
     dates.push('2021-03-01')
-    dates.push('2020-09-01')
+    dates.push('2020-09-20')
     dates.push('2020-03-01')
     dates.push('2019-09-01')
     fetchHistorical(setHistoricalWeights, dates)
