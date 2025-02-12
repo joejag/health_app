@@ -20,11 +20,15 @@ export const ProgressSummary = ({ healthResults }: { healthResults: DecoratedHea
   React.useEffect(() => {
     const labels = Array.from({ length: new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).getDate() }, (_, i) => i + 1)
 
-    const dataKnown = healthResults
+    const data = padDataToCurrentMonth([])
+    healthResults
       .slice()
       .reverse()
-      .map((day) => day.fat)
-    const data = padDataToCurrentMonth(dataKnown)
+      .forEach((d) => {
+        // handle missing data
+        const idx = new Date(d.date).getDate() - 1
+        data[idx] = d.fat
+      })
 
     setChartData({
       labels,
@@ -55,7 +59,7 @@ export const ProgressSummary = ({ healthResults }: { healthResults: DecoratedHea
         kg
       </h3>
 
-      {chartData && <Line data={chartData} options={{}} />}
+      {chartData && <Line data={chartData} options={{ spanGaps: true }} />}
     </>
   )
 }
