@@ -8,20 +8,34 @@ import { fetchHistorical } from '../biz/fetchData'
 
 Chart.register(CategoryScale)
 
-export const Historical = () => {
+function formatDate(date: Date): string {
+  const year = date.getFullYear()
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  const day = String(date.getDate()).padStart(2, '0')
+  return `${year}-${month}-${day}`
+}
+
+function generateWeeklyDatesUntilNow(startDate: Date): string[] {
+  const dates: string[] = []
+  const currentDate = new Date(startDate)
+  const today = new Date() // Get today's date
+
+  while (currentDate <= today) {
+    dates.push(formatDate(currentDate))
+    currentDate.setDate(currentDate.getDate() + 7) // Increment by 7 days (1 week)
+  }
+
+  return dates
+}
+
+export const CurrentJourney = () => {
   const [historicalWeights, setHistoricalWeights] = React.useState<any[]>([])
 
   const [chartData, setChartData] = React.useState<any>()
 
   React.useEffect(() => {
-    const labels = historicalWeights
-      .slice()
-      .reverse()
-      .map((day) => new Date(day.date).toLocaleString('default', { month: 'short', year: 'numeric' }))
-    const data = historicalWeights
-      .slice()
-      .reverse()
-      .map((day) => day.total)
+    const labels = historicalWeights.slice().map((day) => new Date(day.date).toLocaleString('default', { month: 'short', year: 'numeric' }))
+    const data = historicalWeights.slice().map((day) => day.total)
 
     // Add the BMI classification lines
     const bmiNormalUpperLine = Array(labels.length).fill(75.3) // Upper limit of normal weight
@@ -34,7 +48,7 @@ export const Historical = () => {
         {
           label: 'Weight',
           data,
-          backgroundColor: '#095798',
+          backgroundColor: '#6f42c1',
           borderColor: 'black',
           borderWidth: 1,
         },
@@ -67,22 +81,14 @@ export const Historical = () => {
   }, [historicalWeights])
 
   React.useEffect(() => {
-    const dates = []
-    dates.push('2023-09-01')
-    dates.push('2023-03-01')
-    dates.push('2022-09-05')
-    dates.push('2022-03-01')
-    dates.push('2021-09-01')
-    dates.push('2021-03-01')
-    dates.push('2020-09-20')
-    dates.push('2020-03-01')
-    dates.push('2019-09-01')
-    fetchHistorical(setHistoricalWeights, dates)
+    const startDate: Date = new Date('2024-12-15')
+    const weeklyDatesArray: string[] = generateWeeklyDatesUntilNow(startDate)
+    fetchHistorical(setHistoricalWeights, weeklyDatesArray)
   }, [])
 
   return (
     <>
-      <h2>Historical</h2>
+      <h2>Current Journey</h2>
 
       {chartData && (
         <div style={{ height: '500px', width: '100%' }}>
@@ -98,16 +104,16 @@ export const Historical = () => {
 
       <table>
         <thead>
-          <tr className="past">
+          <tr className="journey">
             <th>When</th>
             <th>Weight</th>
             <th>Fat</th>
           </tr>
         </thead>
-        <tbody className="past">
+        <tbody className="journey">
           {historicalWeights.map((day) => (
             <tr key={day.date}>
-              <td>{new Date(day.date).toLocaleString('default', { month: 'short', year: 'numeric' })}</td>
+              <td>{new Date(day.date).toLocaleString('default', { day: 'numeric', month: 'short', year: 'numeric' })}</td>
               <td>{day.total}kg</td>
               <td>{day.fat}kg</td>
             </tr>

@@ -13,23 +13,30 @@ def fetch_historical(start_date):
     response = table.get_item(Key={"id": start_date})
     if "Item" not in response:
         client = login_to_fitbit()
-        w = fetch_weight(client, start_date, start_date)[0]
-        table.put_item(Item={"id": start_date, "weight": json.dumps(w)})
+        w = next(iter(fetch_weight(client, start_date, start_date)), None)
+        if w:
+          table.put_item(Item={"id": start_date, "weight": json.dumps(w)})
 
-    response = json.loads(table.get_item(Key={"id": start_date})["Item"]["weight"])
-    response["total"] = round(response["total"], 0)
-    response["fat"] = round(response["fat"], 0)
-    response["lean"] = round(response["lean"], 0)
-    response["date"] = datetime.datetime.strptime(
-        response["dateTime"], "%Y-%m-%d"
-    ).isoformat()
-    return response
+    response = table.get_item(Key={"id": start_date})
+    if 'Item' in response:
+        item = response['Item']
+        response = json.loads(item["weight"])
+        response["total"] = round(response["total"], 0)
+        response["fat"] = round(response["fat"], 0)
+        response["lean"] = round(response["lean"], 0)
+        response["date"] = datetime.datetime.strptime(
+            response["dateTime"], "%Y-%m-%d"
+        ).isoformat()
+        return response
+    else:
+        return None
 
 
 def lambda_handler(event, context):
     if "historical" in event.get("queryStringParameters"):
         dates = event["queryStringParameters"]["historical"].split(",")
-        response = list(map(fetch_historical, dates))
+        unfiltered_response = list(map(fetch_historical, dates))
+        response = list(filter(None, unfiltered_response))
     else:
         from_date = event.get("queryStringParameters").get("from_date")
         client = login_to_fitbit()

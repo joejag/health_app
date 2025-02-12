@@ -9,6 +9,7 @@ import { fetchData } from './biz/fetchData'
 import { judgeDay } from './biz/judge'
 import { baseMetabolicRate, DecoratedHealthResult } from './biz/logic'
 import { Blocks } from './components/Blocks'
+import { CurrentJourney } from './components/CurrentJourney'
 import { Estimates } from './components/Estimates'
 import { Historical } from './components/Historical'
 // import { NextBigEvent } from './components/NextBigEvent'
@@ -77,6 +78,7 @@ function App() {
               <CurrentMonth zippedHealthResults={zippedHealthResults} bmr={bmr} />
             </div>
             <div>
+              <CurrentJourney />
               <Historical />
               <Estimates futureEstimates={futureEstimates} />
             </div>
