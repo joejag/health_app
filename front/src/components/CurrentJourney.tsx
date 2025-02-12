@@ -3,7 +3,6 @@ import Chart from 'chart.js/auto'
 import React from 'react'
 import { Line } from 'react-chartjs-2'
 
-import { tenMonths } from '../biz/dateRange'
 import { fetchHistorical } from '../biz/fetchData'
 
 Chart.register(CategoryScale)
