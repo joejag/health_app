@@ -3,6 +3,7 @@ import Chart from 'chart.js/auto'
 import React from 'react'
 import { Line } from 'react-chartjs-2'
 
+import { START_DATE } from '../biz/config'
 import { fetchHistorical } from '../biz/fetchData'
 
 Chart.register(CategoryScale)
@@ -14,9 +15,9 @@ function formatDate(date: Date): string {
   return `${year}-${month}-${day}`
 }
 
-function generateWeeklyDatesUntilNow(startDate: Date): string[] {
+function generateWeeklyDatesUntilNow(START_DATE: Date): string[] {
   const dates: string[] = []
-  const currentDate = new Date(startDate)
+  const currentDate = new Date(START_DATE)
   const today = new Date() // Get today's date
 
   while (currentDate <= today) {
@@ -29,12 +30,22 @@ function generateWeeklyDatesUntilNow(startDate: Date): string[] {
 
 export const CurrentJourney = () => {
   const [historicalWeights, setHistoricalWeights] = React.useState<any[]>([])
-
   const [chartData, setChartData] = React.useState<any>()
 
   React.useEffect(() => {
-    const labels = historicalWeights.slice().map((day) => new Date(day.date).toLocaleString('default', { month: 'short', year: 'numeric' }))
-    const data = historicalWeights.slice().map((day) => day.total)
+    const weeklyDatesArray: string[] = generateWeeklyDatesUntilNow(START_DATE)
+
+    const labels = weeklyDatesArray.map((day) =>
+      new Date(day).toLocaleString('default', { day: 'numeric', month: 'short', year: '2-digit' })
+    )
+
+    const data = new Array(labels.length).fill(null)
+
+    historicalWeights.forEach((d) => {
+      // handle missing data
+      const idx = labels.indexOf(new Date(d.date).toLocaleString('default', { day: 'numeric', month: 'short', year: '2-digit' }))
+      data[idx] = d.total
+    })
 
     // Add the BMI classification lines
     const bmiNormalUpperLine = Array(labels.length).fill(75.3) // Upper limit of normal weight
@@ -80,9 +91,8 @@ export const CurrentJourney = () => {
   }, [historicalWeights])
 
   React.useEffect(() => {
-    const startDate: Date = new Date('2024-12-15')
-    const weeklyDatesArray: string[] = generateWeeklyDatesUntilNow(startDate)
-    fetchHistorical(setHistoricalWeights, weeklyDatesArray)
+    const weeklyDatesArray: string[] = generateWeeklyDatesUntilNow(START_DATE)
+    fetchHistorical(setHistoricalWeights, weeklyDatesArray.slice())
   }, [])
 
   return (
@@ -96,6 +106,7 @@ export const CurrentJourney = () => {
             options={{
               responsive: true,
               maintainAspectRatio: false,
+              spanGaps: true,
             }}
           />
         </div>
