@@ -30,6 +30,12 @@ export const ProgressSummary = ({ healthResults }: { healthResults: DecoratedHea
         data[idx] = d.fat
       })
 
+    // Calculate the desired loss trendline
+    const trendline = labels.map((day, index) => {
+      const slope = (desiredWeight - startWeight) / (labels.length - 1)
+      return startWeight + slope * index
+    })
+
     setChartData({
       labels,
       datasets: [
@@ -41,16 +47,16 @@ export const ProgressSummary = ({ healthResults }: { healthResults: DecoratedHea
           borderWidth: 1,
         },
         {
-          label: 'Goal Weight',
-          data: Array(labels.length).fill(desiredWeight), // Goal weight for every day
-          borderColor: 'red',
+          label: 'Desired Loss Trendline',
+          data: trendline, // Trendline data
+          borderColor: 'blue',
           borderWidth: 2,
           borderDash: [5, 5], // Make the line dashed
           pointRadius: 0, // Remove points
         },
       ],
     })
-  }, [healthResults, desiredWeight])
+  }, [healthResults, desiredWeight, startWeight])
 
   return (
     <>
