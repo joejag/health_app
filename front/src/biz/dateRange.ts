@@ -24,19 +24,29 @@ export function formatDateToYYYYMMDD(date: Date): string {
   return `${year}-${month}-${day}`
 }
 
-export const daysThisMonth = () => {
+export const daysThisMonth = (monthToUse: Date): Date[] => {
   const currentDate: Date = new Date()
-  const currentMonth: number = currentDate.getMonth()
-  const currentYear: number = currentDate.getFullYear()
+  const currentMonth: number = monthToUse.getMonth()
+  const currentYear: number = monthToUse.getFullYear()
 
-  const passedDates: Date[] = []
-  for (let day = 1; day <= currentDate.getDate(); day++) {
+  // Check if the monthToUse is the current month
+  const isCurrentMonth: boolean = currentMonth === currentDate.getMonth() && currentYear === currentDate.getFullYear()
+
+  // Get the number of days in the month
+  const daysInMonth: number = new Date(currentYear, currentMonth + 1, 0).getDate()
+
+  // Generate the dates
+  const dates: Date[] = []
+  for (let day = 1; day <= daysInMonth; day++) {
     const currentDay: Date = new Date(currentYear, currentMonth, day)
 
-    if (currentDay <= currentDate) {
-      passedDates.push(currentDay)
+    // If it's the current month, only include dates up to the current day
+    if (isCurrentMonth && currentDay > currentDate) {
+      break
     }
+
+    dates.push(currentDay)
   }
 
-  return passedDates
+  return dates
 }

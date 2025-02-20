@@ -5,14 +5,22 @@ import { DecoratedHealthResult } from '../biz/logic'
 
 const DAY_NAMES: string[] = ['S', 'M', 'T', 'W', 'T', 'F', 'S']
 
-export const Blocks = ({ healthResults, bmr }: { healthResults: DecoratedHealthResult[]; bmr: number }) => {
+export const Blocks = ({
+  healthResults,
+  bmr,
+  firstDayOfTheMonth,
+}: {
+  healthResults: DecoratedHealthResult[]
+  bmr: number
+  firstDayOfTheMonth: Date
+}) => {
   type MyDictionary = Record<string, DecoratedHealthResult>
 
   const knownDates: MyDictionary = {}
   healthResults.forEach((hr) => {
     knownDates[hr.date] = hr
   })
-  const days = daysThisMonth().map((d) => {
+  const days = daysThisMonth(firstDayOfTheMonth).map((d) => {
     return { date: d, day: formatDateToYYYYMMDD(d) }
   })
 

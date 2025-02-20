@@ -13,13 +13,21 @@ const padDataToCurrentMonth = (data: any) => {
   return Array.from({ length: daysInMonth }, (_, i) => data[i] ?? null)
 }
 
-export const ProgressSummary = ({ healthResults }: { healthResults: DecoratedHealthResult[] }) => {
+export const ProgressSummary = ({
+  healthResults,
+  firstDayOfTheMonth,
+}: {
+  healthResults: DecoratedHealthResult[]
+  firstDayOfTheMonth: Date
+}) => {
   const { startWeight, amountLost, desiredWeight } = calculateProgress(healthResults)
 
   const [chartData, setChartData] = React.useState<any>()
   React.useEffect(() => {
-    const labels = Array.from({ length: new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).getDate() }, (_, i) => i + 1)
-
+    const labels = Array.from(
+      { length: new Date(firstDayOfTheMonth.getFullYear(), firstDayOfTheMonth.getMonth() + 1, 0).getDate() },
+      (_, i) => i + 1
+    )
     const data = padDataToCurrentMonth([])
     healthResults
       .slice()
@@ -56,7 +64,7 @@ export const ProgressSummary = ({ healthResults }: { healthResults: DecoratedHea
         },
       ],
     })
-  }, [healthResults, desiredWeight, startWeight])
+  }, [healthResults, firstDayOfTheMonth, desiredWeight, startWeight])
 
   return (
     <>
