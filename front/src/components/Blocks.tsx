@@ -41,9 +41,9 @@ const Block = ({ result, bmr, date }: { result: DecoratedHealthResult; bmr: numb
   const exerciseColor = result.steps > 10000 ? '#009879' : '#c93402'
   return (
     <div className="vertical-container">
-      <span className="block" style={{ backgroundColor: ateColor }}>
+      {/* <span className="block" style={{ backgroundColor: ateColor }}>
         &nbsp;
-      </span>
+      </span> */}
       <span className="block" style={{ backgroundColor: exerciseColor }}>
         &nbsp;
       </span>
@@ -55,9 +55,9 @@ const Block = ({ result, bmr, date }: { result: DecoratedHealthResult; bmr: numb
 const EmptyBlock = ({ date }: { date: Date }) => {
   return (
     <div className="vertical-container">
-      <span className="block" style={{ backgroundColor: 'grey' }}>
+      {/* <span className="block" style={{ backgroundColor: 'grey' }}>
         &nbsp;
-      </span>
+      </span> */}
       <span className="block" style={{ backgroundColor: 'grey' }}>
         &nbsp;
       </span>
