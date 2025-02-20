@@ -107,7 +107,7 @@ function App() {
         <div
           style={{
             width,
-            height,
+            height: window.innerHeight,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
