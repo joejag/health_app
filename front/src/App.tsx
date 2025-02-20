@@ -78,7 +78,7 @@ function App() {
     <main>
       {celebrate && <Confetti width={width} height={height} opacity={0.5} numberOfPieces={1000} recycle={false} />}
 
-      {healthResults.length > 0 && (
+      {!loading && healthResults.length > 0 && (
         <>
           <Blocks healthResults={healthResults} bmr={state.bmr} firstDayOfTheMonth={firstDayOfTheMonth} />
           <ProgressSummary healthResults={healthResults} firstDayOfTheMonth={firstDayOfTheMonth} />
@@ -92,8 +92,7 @@ function App() {
                   Next
                 </button>
               </div>
-              {loading && <SpinnerRoundOutlined />}
-              {!loading && <CurrentMonth zippedHealthResults={zippedHealthResults} bmr={bmr} dataDate={firstDayOfTheMonth} />}
+              <CurrentMonth zippedHealthResults={zippedHealthResults} bmr={bmr} dataDate={firstDayOfTheMonth} />
             </div>
             <div>
               <NextBigEvent />
@@ -104,7 +103,7 @@ function App() {
           </div>
         </>
       )}
-      {healthResults.length === 0 && (
+      {loading && (
         <div
           style={{
             width,
