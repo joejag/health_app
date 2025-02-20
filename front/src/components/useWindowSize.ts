@@ -3,7 +3,7 @@ import React from 'react'
 export const useWindowSize = () => {
   const [windowSize, setWindowSize] = React.useState({
     width: window.innerWidth,
-    height: window.innerHeight,
+    height: document.documentElement.scrollHeight,
   })
 
   React.useEffect(() => {
@@ -13,7 +13,7 @@ export const useWindowSize = () => {
     }
   }, [])
   const resizeHandler = () => {
-    setWindowSize({ width: window.innerWidth, height: window.innerHeight })
+    setWindowSize({ width: window.innerWidth, height: document.documentElement.scrollHeight })
   }
   return windowSize
 }
