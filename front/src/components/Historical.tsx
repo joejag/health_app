@@ -67,6 +67,7 @@ export const Historical = () => {
 
   React.useEffect(() => {
     const dates = []
+    dates.push('2025-03-01')
     dates.push('2024-09-01')
     dates.push('2024-03-01')
     dates.push('2023-09-01')
