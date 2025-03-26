@@ -143,16 +143,8 @@ const CurrentMonth = ({
         <thead>
           <tr>
             <th>Date</th>
-            <th>
-              Weight
-              <br />
-              (Fat + Lean)
-            </th>
-            <th>
-              Calories
-              <br />
-              (Exercise - Ate)
-            </th>
+            <th>Weight</th>
+            <th>Fat + Lean</th>
           </tr>
         </thead>
 
@@ -179,14 +171,10 @@ const DayReport = ({ result, previous }: { result: DecoratedHealthResult; previo
           {result.date}
         </td>
         <td>
-          <span className={result.weightColor}>{result.totalWeight}</span>
-          <br />
-          <span className={`fat ${result.fatColor}`}>{result.fat}</span> + <span>{result.lean}</span>
+          <span className={`fat ${result.weightColor}`}>{result.totalWeight}</span>
         </td>
         <td>
-          <span className={result.exercise - result.ate > 0 ? 'green' : 'red'}>{result.diff}</span>
-          <br />
-          {result.exercise} - {result.ate}
+          <span className={`fat ${result.fatColor}`}>{result.fat}</span> + <span>{result.lean}</span>
         </td>
       </tr>
 
