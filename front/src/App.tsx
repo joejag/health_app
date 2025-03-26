@@ -97,8 +97,8 @@ function App() {
             <div>
               <NextBigEvent />
               <CurrentJourney />
-              <Historical />
               <Estimates futureEstimates={futureEstimates} />
+              <Historical />
             </div>
           </div>
         </>

@@ -68,16 +68,27 @@ export const Historical = () => {
   React.useEffect(() => {
     const dates = []
     dates.push('2025-03-01')
+    dates.push('2024-12-01')
     dates.push('2024-09-01')
+    dates.push('2024-06-01')
     dates.push('2024-03-01')
+    dates.push('2023-12-01')
     dates.push('2023-09-01')
+    dates.push('2023-06-01')
     dates.push('2023-03-01')
+    dates.push('2022-12-05')
     dates.push('2022-09-05')
+    dates.push('2022-06-01')
     dates.push('2022-03-01')
+    dates.push('2021-12-01')
     dates.push('2021-09-01')
+    dates.push('2021-06-01')
     dates.push('2021-03-01')
+    dates.push('2020-12-01')
     dates.push('2020-09-20')
+    dates.push('2020-06-01')
     dates.push('2020-03-01')
+    dates.push('2019-12-01')
     dates.push('2019-09-01')
     fetchHistorical(setHistoricalWeights, dates)
   }, [])
@@ -97,25 +108,6 @@ export const Historical = () => {
           />
         </div>
       )}
-
-      <table>
-        <thead>
-          <tr className="past">
-            <th>When</th>
-            <th>Weight</th>
-            <th>Fat</th>
-          </tr>
-        </thead>
-        <tbody className="past">
-          {historicalWeights.map((day) => (
-            <tr key={day.date}>
-              <td>{new Date(day.date).toLocaleString('default', { month: 'short', year: 'numeric' })}</td>
-              <td>{day.total}kg</td>
-              <td>{day.fat}kg</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
     </>
   )
 }
