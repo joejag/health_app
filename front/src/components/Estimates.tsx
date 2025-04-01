@@ -3,6 +3,7 @@ import Chart from 'chart.js/auto'
 import React from 'react'
 import { Line } from 'react-chartjs-2'
 
+import { FAT_LOSS_GOAL, FAT_LOSS_TOTAL_GOAL } from '../biz/config'
 import { Estimate } from '../biz/estimate'
 
 Chart.register(CategoryScale)
@@ -57,7 +58,9 @@ export const Estimates = ({ futureEstimates }: { futureEstimates: Estimate[] }) 
 
   return (
     <>
-      <h2>Estimate to 12kg fat</h2>
+      <h2>
+        Estimate to {FAT_LOSS_TOTAL_GOAL}kg fat at {FAT_LOSS_GOAL}kg loss a month
+      </h2>
       {chartData && (
         <div style={{ height: '300px', width: '100%' }}>
           <Line

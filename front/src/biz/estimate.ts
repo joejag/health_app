@@ -1,4 +1,4 @@
-import { FAT_LOSS_GOAL } from './config'
+import { FAT_LOSS_GOAL, FAT_LOSS_TOTAL_GOAL } from './config'
 import { tenMonths } from './dateRange'
 import { DecoratedHealthResult } from './logic'
 
@@ -21,5 +21,5 @@ export const estimate = (latest: DecoratedHealthResult): Estimate[] => {
     return { ...doi, total: total - FAT_LOSS_GOAL * monthsSince, fat: fat - FAT_LOSS_GOAL * monthsSince }
   })
 
-  return estimates.filter((est) => est.fat > 11)
+  return estimates.filter((est) => est.fat > FAT_LOSS_TOTAL_GOAL)
 }
