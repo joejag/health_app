@@ -73,7 +73,7 @@ export const Estimates = ({ futureEstimates }: { futureEstimates: Estimate[] }) 
         </div>
       )}
 
-      <table>
+      <table style={{ width: '100%' }}>
         <thead>
           <tr className="estimate">
             <th>When</th>

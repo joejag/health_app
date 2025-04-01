@@ -112,7 +112,7 @@ export const CurrentJourney = () => {
         </div>
       )}
 
-      <table>
+      <table style={{ width: '100%' }}>
         <thead>
           <tr className="journey">
             <th>When</th>
