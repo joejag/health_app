@@ -138,22 +138,9 @@ const CurrentMonth = ({
       <h2>
         {currentMonth} - BMR {bmr}
       </h2>
-
-      {/* <table>
-        <thead>
-          <tr>
-            <th>Date</th>
-            <th>Weight</th>
-            <th>Fat + Lean</th>
-          </tr>
-        </thead>
-
-        <tbody> */}
       {zippedHealthResults.map((result) => (
         <DayReport result={result[0]} previous={result[1]} key={result[0].date} />
       ))}
-      {/* </tbody>
-      </table> */}
     </>
   )
 }
@@ -166,7 +153,7 @@ const DayReport = ({ result, previous }: { result: DecoratedHealthResult; previo
   const pillStyles = {
     container: (celebrate: boolean) => ({
       display: 'flex',
-      border: `1px solid ${celebrate ? 'gold' : 'black'}`,
+      border: `${celebrate ? '3px' : '1px'} solid ${celebrate ? 'gold' : 'black'}`,
       borderRadius: '999px',
       overflow: 'hidden',
       width: '100%',
@@ -191,7 +178,6 @@ const DayReport = ({ result, previous }: { result: DecoratedHealthResult; previo
       padding: '0 8px',
     },
     weight: {
-      backgroundColor: '#4CAF50',
       color: 'white',
       fontWeight: 'bold',
     },
@@ -200,7 +186,6 @@ const DayReport = ({ result, previous }: { result: DecoratedHealthResult; previo
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      backgroundColor: '#388E3C',
       color: 'white',
       fontWeight: 'bold',
     },

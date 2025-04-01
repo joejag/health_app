@@ -92,14 +92,14 @@ export const decorate = (input: HealthResult[]): DecoratedHealthResult[] => {
   for (let i = 0; i < input.length; i++) {
     const day = input[i]
 
-    let weightColor = 'yellow'
-    let fatColor = 'yellow'
+    let weightColor = 'gray'
+    let fatColor = 'gray'
 
     if (i !== 0) {
       const previous = input[i - 1]
       weightColor = day.totalWeight > previous.totalWeight ? 'red' : 'green'
       if (day.totalWeight > previous.totalWeight && day.fat <= previous.fat) {
-        weightColor = 'yellow'
+        weightColor = 'gray'
       }
       fatColor = day.fat > previous.fat ? 'red' : 'green'
     }

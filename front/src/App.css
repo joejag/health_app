@@ -178,6 +178,7 @@ tbody tr:last-of-type {
   .desktop-layout {
     display: flex;
     gap: 4em;
+    justify-content: space-around;
   }
 
   .block {
