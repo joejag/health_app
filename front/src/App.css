@@ -225,3 +225,15 @@ tbody tr:last-of-type {
 .nav-button:active {
   transform: translateY(0); /* Reset lift effect on click */
 }
+
+@keyframes celebrateBorder {
+  0% {
+    box-shadow: 0 0 0 0px gold;
+  }
+  50% {
+    box-shadow: 0 0 0 4px gold;
+  }
+  100% {
+    box-shadow: 0 0 0 0px gold;
+  }
+}

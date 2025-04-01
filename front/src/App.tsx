@@ -139,7 +139,7 @@ const CurrentMonth = ({
         {currentMonth} - BMR {bmr}
       </h2>
 
-      <table>
+      {/* <table>
         <thead>
           <tr>
             <th>Date</th>
@@ -148,51 +148,104 @@ const CurrentMonth = ({
           </tr>
         </thead>
 
-        <tbody>
-          {zippedHealthResults.map((result) => (
-            <DayReport result={result[0]} previous={result[1]} key={result[0].date} />
-          ))}
-        </tbody>
-      </table>
+        <tbody> */}
+      {zippedHealthResults.map((result) => (
+        <DayReport result={result[0]} previous={result[1]} key={result[0].date} />
+      ))}
+      {/* </tbody>
+      </table> */}
     </>
   )
 }
 
 const DayReport = ({ result, previous }: { result: DecoratedHealthResult; previous: DecoratedHealthResult[] }) => {
-  const { celebrate, isDropInFat, isDropInWeight } = judgeDay(result, previous)
-  const dayOfTheWeek = new Date(result.date).toLocaleString('default', { weekday: 'short' })
+  const { celebrate } = judgeDay(result, previous)
+  const dayOfMonth = new Date(result.date).getDate()
+  const weekdayShort = new Date(result.date).toLocaleString('default', { weekday: 'short' })
+
+  const pillStyles = {
+    container: (celebrate: boolean) => ({
+      display: 'flex',
+      border: `1px solid ${celebrate ? 'gold' : 'black'}`,
+      borderRadius: '999px',
+      overflow: 'hidden',
+      width: '100%',
+      fontFamily: 'sans-serif',
+      marginBottom: '0.5rem',
+      height: '60px',
+      animation: celebrate ? 'celebrateBorder 3 s ease-in-out forwards' : 'none',
+    }),
+    segment: {
+      flex: 1,
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+      textAlign: 'center',
+      minWidth: 0,
+      overflow: 'hidden',
+    },
+    date: {
+      backgroundColor: 'white',
+      color: 'black',
+      borderRight: '1px solid black',
+      padding: '0 8px',
+    },
+    weight: {
+      backgroundColor: '#4CAF50',
+      color: 'white',
+      fontWeight: 'bold',
+    },
+    fat: {
+      flex: 1,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: '#388E3C',
+      color: 'white',
+      fontWeight: 'bold',
+    },
+    lean: {
+      flex: 1,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      color: 'black',
+      borderTop: '1px solid rgba(0,0,0,0.1)',
+    },
+  } as const // "as const" for stricter type inference
 
   return (
-    <>
-      <tr>
-        <td>
-          {dayOfTheWeek}
-          <br />
-          {result.date}
-        </td>
-        <td>
-          <span className={`fat ${result.weightColor}`}>{result.totalWeight}</span>
-        </td>
-        <td>
-          <span className={`fat ${result.fatColor}`}>{result.fat}</span> + <span>{result.lean}</span>
-        </td>
-      </tr>
+    <div style={pillStyles.container(celebrate)}>
+      {/* Date */}
+      <div style={{ ...pillStyles.segment, ...pillStyles.date }}>
+        <div style={{ fontWeight: 'bold', lineHeight: '1.2' }}>{dayOfMonth}</div>
+        <div style={{ fontSize: '0.75rem', textTransform: 'uppercase' }}>{weekdayShort}</div>
+      </div>
 
-      {celebrate && (
-        <tr>
-          <td colSpan={3}>
-            {isDropInWeight && <img src="/images/tada1.png" height="100px" alt="" />}
-            {isDropInFat && <img src="/images/tada2.webp" height="100px" alt="" />}
+      {/* Weight */}
+      <div
+        style={{
+          ...pillStyles.segment,
+          ...pillStyles.weight,
+          backgroundColor: result.weightColor,
+        }}
+      >
+        {result.totalWeight}
+      </div>
 
-            <br />
-
-            {isDropInWeight && isDropInFat && <strong> Weight &amp; Fat drop </strong>}
-            {isDropInWeight && !isDropInFat && <strong>Weight drop</strong>}
-            {isDropInFat && !isDropInWeight && <strong>Fat drop</strong>}
-          </td>
-        </tr>
-      )}
-    </>
+      {/* Stacked Fat + Lean (rightmost) */}
+      <div style={{ ...pillStyles.segment, padding: 0 }}>
+        <div
+          style={{
+            ...pillStyles.fat,
+            backgroundColor: result.fatColor,
+          }}
+        >
+          {result.fat}
+        </div>
+        <div style={pillStyles.lean}>{result.lean}</div>
+      </div>
+    </div>
   )
 }
 
