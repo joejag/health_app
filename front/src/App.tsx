@@ -159,7 +159,7 @@ const DayReport = ({ result, previous }: { result: DecoratedHealthResult; previo
       width: '100%',
       fontFamily: 'sans-serif',
       marginBottom: '0.5rem',
-      height: '60px',
+      height: '50px',
       animation: celebrate ? 'celebrateBorder 3 s ease-in-out forwards' : 'none',
     }),
     segment: {
@@ -180,6 +180,7 @@ const DayReport = ({ result, previous }: { result: DecoratedHealthResult; previo
     weight: {
       color: 'white',
       fontWeight: 'bold',
+      fontSize: '1.25rem',
     },
     fat: {
       flex: 1,
