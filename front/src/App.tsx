@@ -84,6 +84,7 @@ function App() {
           <ProgressSummary healthResults={healthResults} firstDayOfTheMonth={firstDayOfTheMonth} />
           <div className="desktop-layout">
             <div>
+              <NextBigEvent />
               <div className="navigation-buttons">
                 <button className="nav-button prev" onClick={goBackAMonth}>
                   Previous
@@ -95,7 +96,6 @@ function App() {
               <CurrentMonth zippedHealthResults={zippedHealthResults} bmr={bmr} dataDate={firstDayOfTheMonth} />
             </div>
             <div>
-              <NextBigEvent />
               <CurrentJourney />
               <Estimates futureEstimates={futureEstimates} />
               <Historical />
