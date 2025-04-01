@@ -95,7 +95,7 @@ export const Historical = () => {
 
   return (
     <>
-      <h2>Historical</h2>
+      <h2>Since 2019</h2>
 
       {chartData && (
         <div style={{ height: '500px', width: '100%' }}>
