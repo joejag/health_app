@@ -37,15 +37,12 @@ export const Blocks = ({
 }
 
 const Block = ({ result, bmr, date }: { result: DecoratedHealthResult; bmr: number; date: Date }) => {
-  // const ateColor = bmr + 500 > result.ate ? '#009879' : '#c93402'
   const exerciseColor = result.steps > 10000 ? '#009879' : '#c93402'
+
   return (
     <div className="vertical-container">
-      {/* <span className="block" style={{ backgroundColor: ateColor }}>
-        &nbsp;
-      </span> */}
-      <span className="block" style={{ backgroundColor: exerciseColor }}>
-        &nbsp;
+      <span className="block" style={{ backgroundColor: exerciseColor, fontSize: '1.6em', color: 'white', alignContent: 'center' }}>
+        {Math.round(result.steps / 1000)}k
       </span>
       <span>{DAY_NAMES[date.getDay()]}</span>
     </div>
@@ -55,9 +52,6 @@ const Block = ({ result, bmr, date }: { result: DecoratedHealthResult; bmr: numb
 const EmptyBlock = ({ date }: { date: Date }) => {
   return (
     <div className="vertical-container">
-      {/* <span className="block" style={{ backgroundColor: 'grey' }}>
-        &nbsp;
-      </span> */}
       <span className="block" style={{ backgroundColor: 'grey' }}>
         &nbsp;
       </span>
