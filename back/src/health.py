@@ -195,17 +195,5 @@ def fetch(client, d_from):
                     "steps": int(day["s"]["value"]),
                 }
             )
-        # This code only works as the previous vars for lean etc are around
-        if "w" not in day and "e" in day:
-            result.append(
-                {
-                    "date": dateTime,
-                    "totalWeight": total_weight,
-                    "lean": lean,
-                    "fat": fat,
-                    "exercise": int(day["e"]["value"]),
-                    "steps": int(day["s"]["value"]),
-                }
-            )
 
     return sorted(result, key=lambda r: r["date"])
