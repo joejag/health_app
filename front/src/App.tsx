@@ -87,11 +87,17 @@ function App() {
               <NextBigEvent />
               <div className="navigation-buttons">
                 <button className="nav-button prev" onClick={goBackAMonth}>
-                  Previous
+                  {new Date(firstDayOfTheMonth.getFullYear(), firstDayOfTheMonth.getMonth() - 1, 1).toLocaleString('default', {
+                    month: 'long',
+                  })}
                 </button>
-                <button className="nav-button next" onClick={goForwardAMonth}>
-                  Next
-                </button>
+                {new Date(firstDayOfTheMonth.getFullYear(), firstDayOfTheMonth.getMonth() + 1, 1) < new Date() && (
+                  <button className="nav-button next" onClick={goForwardAMonth}>
+                    {new Date(firstDayOfTheMonth.getFullYear(), firstDayOfTheMonth.getMonth() + 1, 1).toLocaleString('default', {
+                      month: 'long',
+                    })}
+                  </button>
+                )}
               </div>
               <CurrentMonth zippedHealthResults={zippedHealthResults} bmr={bmr} dataDate={firstDayOfTheMonth} />
             </div>
