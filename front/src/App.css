@@ -185,6 +185,7 @@ tbody tr:last-of-type {
     width: 26px;
     height: 26px;
     margin-bottom: 1px;
+    font-size: 1.6em;
   }
 }
 

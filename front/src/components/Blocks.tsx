@@ -5,15 +5,7 @@ import { DecoratedHealthResult } from '../biz/logic'
 
 const DAY_NAMES: string[] = ['S', 'M', 'T', 'W', 'T', 'F', 'S']
 
-export const Blocks = ({
-  healthResults,
-  bmr,
-  firstDayOfTheMonth,
-}: {
-  healthResults: DecoratedHealthResult[]
-  bmr: number
-  firstDayOfTheMonth: Date
-}) => {
+export const Blocks = ({ healthResults, firstDayOfTheMonth }: { healthResults: DecoratedHealthResult[]; firstDayOfTheMonth: Date }) => {
   type MyDictionary = Record<string, DecoratedHealthResult>
 
   const knownDates: MyDictionary = {}
@@ -28,7 +20,7 @@ export const Blocks = ({
     <div style={{ display: 'flex' }}>
       {days.map(({ date, day }) => (
         <React.Fragment key={day}>
-          {knownDates[day] !== undefined && <Block bmr={bmr} result={knownDates[day]} date={date} />}
+          {knownDates[day] !== undefined && <Block result={knownDates[day]} date={date} />}
           {knownDates[day] === undefined && <EmptyBlock date={date} />}
         </React.Fragment>
       ))}
@@ -36,13 +28,13 @@ export const Blocks = ({
   )
 }
 
-const Block = ({ result, bmr, date }: { result: DecoratedHealthResult; bmr: number; date: Date }) => {
+const Block = ({ result, date }: { result: DecoratedHealthResult; date: Date }) => {
   const exerciseColor = result.steps > 10000 ? '#009879' : '#c93402'
 
   return (
     <div className="vertical-container">
-      <span className="block" style={{ backgroundColor: exerciseColor, fontSize: '1.6em', color: 'white', alignContent: 'center' }}>
-        {Math.round(result.steps / 1000)}k
+      <span className="block" style={{ backgroundColor: exerciseColor, color: 'white', alignContent: 'center' }}>
+        {Math.floor(Math.round(result.steps) / 1000)}
       </span>
       <span>{DAY_NAMES[date.getDay()]}</span>
     </div>

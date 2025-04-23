@@ -80,7 +80,7 @@ function App() {
 
       {!loading && healthResults.length > 0 && (
         <>
-          <Blocks healthResults={healthResults} bmr={state.bmr} firstDayOfTheMonth={firstDayOfTheMonth} />
+          <Blocks healthResults={healthResults} firstDayOfTheMonth={firstDayOfTheMonth} />
           <ProgressSummary healthResults={healthResults} firstDayOfTheMonth={firstDayOfTheMonth} />
           <div className="desktop-layout">
             <div>
