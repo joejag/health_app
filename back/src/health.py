@@ -158,7 +158,6 @@ def fetch(client, d_from):
         d_to = datetime.datetime.now()
 
     w = fetch_weight(client, d_from, d_to)
-    c = fetch_calories(client, d_from, d_to)
     e = fetch_exercise(client, d_from, d_to)
     s = fetch_steps(client, d_from, d_to)
 
@@ -167,11 +166,6 @@ def fetch(client, d_from):
         dt = weight["dateTime"]
         current = merged.get(dt, {})
         current["w"] = weight
-        merged[dt] = current
-    for calories in c:
-        dt = calories["dateTime"]
-        current = merged.get(dt, {})
-        current["c"] = calories
         merged[dt] = current
     for exercise in e:
         dt = exercise["dateTime"]
@@ -191,17 +185,26 @@ def fetch(client, d_from):
             total_weight = round(day["w"]["total"], 1)
             lean = round(day["w"]["lean"], 1)
             fat = round(day["w"]["fat"], 1)
-            diff = int(float(day["c"]["value"]) - float(day["e"]["value"]))
             result.append(
                 {
                     "date": dateTime,
                     "totalWeight": total_weight,
                     "lean": lean,
                     "fat": fat,
-                    "ate": int(day["c"]["value"]),
                     "exercise": int(day["e"]["value"]),
                     "steps": int(day["s"]["value"]),
-                    "diff": diff,
+                }
+            )
+        # This code only works as the previous vars for lean etc are around
+        if "w" not in day and "e" in day:
+            result.append(
+                {
+                    "date": dateTime,
+                    "totalWeight": total_weight,
+                    "lean": lean,
+                    "fat": fat,
+                    "exercise": int(day["e"]["value"]),
+                    "steps": int(day["s"]["value"]),
                 }
             )
 
