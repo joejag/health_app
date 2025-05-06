@@ -239,3 +239,52 @@ tbody tr:last-of-type {
     box-shadow: 0 0 0 0px gold;
   }
 }
+
+.toggle-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: sans-serif;
+}
+
+.toggle-switch {
+  position: relative;
+  width: 60px;
+  height: 34px;
+  border: none;
+  background: #ddd;
+  border-radius: 34px;
+  cursor: pointer;
+  padding: 0;
+  transition: background-color 0.3s;
+}
+
+.toggle-switch[aria-pressed='true'] {
+  background: #4caf50;
+}
+
+.slider {
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: white;
+  top: 4px;
+  left: 4px;
+  transition: transform 0.3s;
+}
+
+.toggle-switch[aria-pressed='true'] .slider {
+  transform: translateX(26px);
+}
+
+.label {
+  color: #777;
+  font-weight: 500;
+  transition: color 0.3s;
+}
+
+.label.active {
+  color: #333;
+  font-weight: bold;
+}

@@ -22,11 +22,13 @@ export interface DecoratedHealthResult extends HealthResult {
 export interface HealthCalculations {
   amountLost: number
   startWeight: number
+  startWeightTotal: number
   currentWeight: number
   periodProgress: number
   amountLeftToLose: number
   fatLossProgress: number
   desiredWeight: number
+  desiredWeightTotal: number
 }
 
 export interface NextBigEventDetails {
@@ -44,6 +46,7 @@ export const calculateProgress = (items: DecoratedHealthResult[]): HealthCalcula
   const dataAtStart = items[items.length - 1]
 
   const desiredWeight = dataAtStart.fat - FAT_LOSS_GOAL
+  const desiredWeightTotal = dataAtStart.totalWeight - FAT_LOSS_GOAL
   const amountLost = dataToday.fat - dataAtStart.fat
   const amountLeftToLose = dataToday.fat - desiredWeight > 0 ? dataToday.fat - desiredWeight : 0
   const fatLossProgress = Math.abs(amountLost) / FAT_LOSS_GOAL
@@ -51,8 +54,10 @@ export const calculateProgress = (items: DecoratedHealthResult[]): HealthCalcula
 
   return {
     startWeight: dataAtStart.fat,
+    startWeightTotal: dataAtStart.totalWeight,
     currentWeight: dataToday.fat,
     desiredWeight: Math.round(desiredWeight * 10) / 10,
+    desiredWeightTotal: Math.round(desiredWeightTotal * 10) / 10,
     amountLost: Math.round(amountLost * 10) / 10,
     amountLeftToLose: Math.round(amountLeftToLose * 10) / 10,
     fatLossProgress: Math.round(fatLossProgress * 100),

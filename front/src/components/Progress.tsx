@@ -20,7 +20,8 @@ export const ProgressSummary = ({
   healthResults: DecoratedHealthResult[]
   firstDayOfTheMonth: Date
 }) => {
-  const { startWeight, amountLost, desiredWeight } = calculateProgress(healthResults)
+  const { startWeight, startWeightTotal, amountLost, desiredWeight, desiredWeightTotal } = calculateProgress(healthResults)
+  const [chartShown, setChartShown] = React.useState(true)
 
   const [chartData, setChartData] = React.useState<any>()
   React.useEffect(() => {
@@ -66,14 +67,85 @@ export const ProgressSummary = ({
     })
   }, [healthResults, firstDayOfTheMonth, desiredWeight, startWeight])
 
+  const [weightChartData, setWeightChartData] = React.useState<any>()
+  React.useEffect(() => {
+    const labels = Array.from(
+      { length: new Date(firstDayOfTheMonth.getFullYear(), firstDayOfTheMonth.getMonth() + 1, 0).getDate() },
+      (_, i) => i + 1
+    )
+    const data = padDataToCurrentMonth([])
+    healthResults
+      .slice()
+      .reverse()
+      .forEach((d) => {
+        // handle missing data
+        const idx = new Date(d.date).getDate() - 1
+        data[idx] = d.totalWeight
+      })
+
+    // Calculate the desired loss trendline
+    const trendline = labels.map((day, index) => {
+      const slope = (desiredWeightTotal - startWeightTotal) / (labels.length - 1)
+      return startWeightTotal + slope * index
+    })
+
+    setWeightChartData({
+      labels,
+      datasets: [
+        {
+          label: 'Weight',
+          data,
+          backgroundColor: '#009879',
+          borderColor: 'black',
+          borderWidth: 1,
+        },
+        {
+          label: 'Desired Loss Trendline',
+          data: trendline, // Trendline data
+          borderColor: 'blue',
+          borderWidth: 2,
+          borderDash: [5, 5], // Make the line dashed
+          pointRadius: 0, // Remove points
+        },
+      ],
+    })
+  }, [healthResults, firstDayOfTheMonth, desiredWeightTotal, startWeightTotal])
+
   return (
     <>
       <h3 className="justify" style={{ marginTop: '0.2em' }}>
         <span>SW:{startWeight}kg</span> <span className="green">{amountLost}kg</span> <span>GW:{desiredWeight}</span>
         kg
       </h3>
+      <Toggle initialValue={true} onChange={setChartShown} />
 
-      {chartData && <Line data={chartData} options={{ spanGaps: true }} />}
+      {chartShown && chartData && <Line data={chartData} options={{ spanGaps: true }} />}
+      {!chartShown && weightChartData && <Line data={weightChartData} options={{ spanGaps: true }} />}
     </>
+  )
+}
+
+interface ToggleProps {
+  initialValue?: boolean
+  onChange?: (value: boolean) => void
+}
+
+function Toggle({ initialValue = false, onChange }: ToggleProps) {
+  const [isOn, setIsOn] = React.useState(initialValue)
+
+  const handleToggle = () => {
+    const newValue = !isOn
+    setIsOn(newValue)
+    onChange?.(newValue)
+  }
+
+  return (
+    <div className="toggle-container">
+      <span className={`label ${!isOn ? 'active' : ''}`}>Weight</span>
+      <button type="button" className="toggle-switch" onClick={handleToggle} aria-pressed={isOn}>
+        <span className="slider" />
+      </button>
+      <span className={`label ${isOn ? 'active' : ''}`}>Fat</span>
+    </div>
   )
 }
