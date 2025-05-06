@@ -1,5 +1,5 @@
-export const FAT_LOSS_GOAL = 4 // kgs
-export const FAT_LOSS_TOTAL_GOAL = 14
+export const FAT_LOSS_GOAL = 3.5 // kgs
+export const FAT_LOSS_TOTAL_GOAL = 16
 
 export const NEXT_BIG_EVENT = 'Adrian Wedding'
 export const NEXT_BIG_EVENT_DATE = new Date(2025, 5 - 1, 23)
