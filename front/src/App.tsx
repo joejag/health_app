@@ -1,10 +1,8 @@
 import './App.css'
 
-import React, { useEffect } from 'react'
+import React from 'react'
 import Confetti from 'react-confetti'
 import { SpinnerRoundOutlined } from 'spinners-react'
-
-import { useQueryClient } from '@tanstack/react-query'
 
 import { Estimate, estimate } from './biz/estimate'
 import { judgeDay } from './biz/judge'
@@ -42,27 +40,11 @@ const DEFAULT_STATE: State = {
 function App() {
   const { width, height } = useWindowSize()
   const [firstDayOfTheMonth, setFirstDayOfTheMonth] = React.useState(new Date(new Date().getFullYear(), new Date().getMonth(), 1))
+  const { data: results, isLoading } = useMonthlyData(firstDayOfTheMonth)
 
   const [healthResults, setHealthResults] = React.useState<DecoratedHealthResult[]>([])
   const [state, setState] = React.useState(DEFAULT_STATE)
   const { bmr, celebrate, futureEstimates, zippedHealthResults } = state
-
-  const dataDate = `${firstDayOfTheMonth.getFullYear()}-${(firstDayOfTheMonth.getMonth() + 1).toString().padStart(2, '0')}-01`
-  const { data: results, isLoading } = useMonthlyData(dataDate)
-
-  const queryClient = useQueryClient()
-  // useEffect(() => {
-  //   console.log('Cache state:', queryClient.getQueryData(['monthly', dataDate]))
-  // }, [results, queryClient, dataDate])
-  useEffect(() => {
-    console.log(
-      'Current cache keys:',
-      queryClient
-        .getQueryCache()
-        .findAll()
-        .map((q) => q.queryKey)
-    )
-  }, [dataDate])
 
   React.useEffect(() => {
     if (results && results.length > 0) {
