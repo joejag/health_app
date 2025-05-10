@@ -89,7 +89,7 @@ function App() {
           <div className="desktop-layout">
             <div>
               <NextBigEvent />
-              <MonthSwitcher onChange={setFirstDayOfTheMonth} />
+              <MonthSwitcher onChange={setFirstDayOfTheMonth} firstDayOfTheMonth={firstDayOfTheMonth} />
               <CurrentMonth zippedHealthResults={zippedHealthResults} bmr={bmr} dataDate={firstDayOfTheMonth} />
             </div>
             <div>
