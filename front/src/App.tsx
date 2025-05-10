@@ -7,7 +7,6 @@ import { SpinnerRoundOutlined } from 'spinners-react'
 import { Estimate, estimate } from './biz/estimate'
 import { judgeDay } from './biz/judge'
 import { baseMetabolicRate, DecoratedHealthResult } from './biz/logic'
-import { Blocks } from './components/Blocks'
 import { CurrentJourney } from './components/CurrentJourney'
 import { CurrentMonth } from './components/DayReport'
 import { Estimates } from './components/Estimates'
@@ -15,6 +14,7 @@ import { Historical } from './components/Historical'
 import { MonthSwitcher } from './components/MonthSwitcher'
 import { NextBigEvent } from './components/NextBigEvent'
 import { ProgressSummary } from './components/Progress'
+import { StepsReport } from './components/StepsReport'
 import { useWindowSize } from './components/useWindowSize'
 import { useMonthlyData } from './hooks/useMonthlyData'
 
@@ -84,7 +84,7 @@ function App() {
 
       {!isLoading && healthResults.length > 0 && (
         <>
-          <Blocks healthResults={healthResults} firstDayOfTheMonth={firstDayOfTheMonth} />
+          <StepsReport healthResults={healthResults} firstDayOfTheMonth={firstDayOfTheMonth} />
           <ProgressSummary healthResults={healthResults} firstDayOfTheMonth={firstDayOfTheMonth} />
           <div className="desktop-layout">
             <div>

@@ -5,7 +5,13 @@ import { DecoratedHealthResult } from '../biz/logic'
 
 const DAY_NAMES: string[] = ['S', 'M', 'T', 'W', 'T', 'F', 'S']
 
-export const Blocks = ({ healthResults, firstDayOfTheMonth }: { healthResults: DecoratedHealthResult[]; firstDayOfTheMonth: Date }) => {
+export const StepsReport = ({
+  healthResults,
+  firstDayOfTheMonth,
+}: {
+  healthResults: DecoratedHealthResult[]
+  firstDayOfTheMonth: Date
+}) => {
   type MyDictionary = Record<string, DecoratedHealthResult>
 
   const knownDates: MyDictionary = {}

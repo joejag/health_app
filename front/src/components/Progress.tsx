@@ -21,9 +21,10 @@ export const ProgressSummary = ({
   firstDayOfTheMonth: Date
 }) => {
   const { startWeight, startWeightTotal, amountLost, desiredWeight, desiredWeightTotal } = calculateProgress(healthResults)
-  const [chartShown, setChartShown] = React.useState(true)
-
+  const [showFatChart, setShowFatChart] = React.useState(true)
+  const showWeightChart = !showFatChart
   const [chartData, setChartData] = React.useState<any>()
+
   React.useEffect(() => {
     const labels = Array.from(
       { length: new Date(firstDayOfTheMonth.getFullYear(), firstDayOfTheMonth.getMonth() + 1, 0).getDate() },
@@ -114,13 +115,22 @@ export const ProgressSummary = ({
   return (
     <>
       <h3 className="justify" style={{ marginTop: '0.2em' }}>
-        <span>SW:{startWeight}kg</span> <span className="green">{amountLost}kg</span> <span>GW:{desiredWeight}</span>
-        kg
+        {showFatChart && (
+          <>
+            <span>SW:{startWeight}kg</span> <span className="green">{amountLost}kg</span> <span>GW:{desiredWeight}</span>
+            kg
+          </>
+        )}{' '}
+        {showWeightChart && (
+          <>
+            <span>SW:{startWeightTotal}kg</span> <span className="green">{amountLost}kg</span> <span>GW:{desiredWeightTotal}</span>
+            kg
+          </>
+        )}
       </h3>
-      <Toggle initialValue={true} onChange={setChartShown} />
-
-      {chartShown && chartData && <Line data={chartData} options={{ spanGaps: true }} />}
-      {!chartShown && weightChartData && <Line data={weightChartData} options={{ spanGaps: true }} />}
+      <Toggle initialValue={true} onChange={setShowFatChart} />
+      {showFatChart && chartData && <Line data={chartData} options={{ spanGaps: true }} />}
+      {showWeightChart && weightChartData && <Line data={weightChartData} options={{ spanGaps: true }} />}
     </>
   )
 }
