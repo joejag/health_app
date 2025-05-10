@@ -12,6 +12,7 @@ import { CurrentJourney } from './components/CurrentJourney'
 import { CurrentMonth } from './components/DayReport'
 import { Estimates } from './components/Estimates'
 import { Historical } from './components/Historical'
+import { MonthSwitcher } from './components/MonthSwitcher'
 import { NextBigEvent } from './components/NextBigEvent'
 import { ProgressSummary } from './components/Progress'
 import { useWindowSize } from './components/useWindowSize'
@@ -59,18 +60,9 @@ function App() {
         futureEstimates: estimate(results[results.length - 1]),
         zippedHealthResults,
       })
-
       setHealthResults(results)
     }
   }, [results])
-
-  const goBackAMonth = () => {
-    setFirstDayOfTheMonth(new Date(firstDayOfTheMonth.getFullYear(), firstDayOfTheMonth.getMonth() - 1, 1))
-  }
-
-  const goForwardAMonth = () => {
-    setFirstDayOfTheMonth(new Date(firstDayOfTheMonth.getFullYear(), firstDayOfTheMonth.getMonth() + 1, 1))
-  }
 
   return (
     <main>
@@ -97,21 +89,7 @@ function App() {
           <div className="desktop-layout">
             <div>
               <NextBigEvent />
-              <div className="navigation-buttons">
-                <button className="nav-button prev" onClick={goBackAMonth}>
-                  {new Date(firstDayOfTheMonth.getFullYear(), firstDayOfTheMonth.getMonth() - 1, 1).toLocaleString('default', {
-                    month: 'long',
-                  })}
-                </button>
-                {new Date(firstDayOfTheMonth.getFullYear(), firstDayOfTheMonth.getMonth() + 1, 1) < new Date() && (
-                  <button className="nav-button next" onClick={goForwardAMonth}>
-                    {new Date(firstDayOfTheMonth.getFullYear(), firstDayOfTheMonth.getMonth() + 1, 1).toLocaleString('default', {
-                      month: 'long',
-                    })}
-                  </button>
-                )}
-              </div>
-
+              <MonthSwitcher onChange={setFirstDayOfTheMonth} />
               <CurrentMonth zippedHealthResults={zippedHealthResults} bmr={bmr} dataDate={firstDayOfTheMonth} />
             </div>
             <div>
