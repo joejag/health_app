@@ -1,25 +1,21 @@
-import { decorate } from './logic'
+import { decorate, DecoratedHealthResult } from './logic'
 
 const PRODUCTION_URL = 'https://mysplmqrfc.execute-api.eu-west-2.amazonaws.com/serverless_lambda_stage/weight'
 const LOCAL_URL = 'http://localhost:8000'
 
-export const fetchData = (setItems: Function, when: string) => {
+export const fetchData = async (when: string): Promise<DecoratedHealthResult[]> => {
   let url = PRODUCTION_URL
-  if (window.location.href.indexOf('localhost') > -1) {
+  if (window.location.href.includes('localhost')) {
     url = LOCAL_URL
   }
-  url += '?from_date=' + when
+  url += `?from_date=${when}`
 
-  fetch(url)
-    .then((res) => res.json())
-    .then(
-      (result: any) => {
-        setItems(decorate(result).reverse())
-      },
-      (error) => {
-        console.log(error)
-      }
-    )
+  const response = await fetch(url)
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`)
+  }
+  const result = await response.json()
+  return decorate(result).reverse()
 }
 
 interface HistoricalData {
