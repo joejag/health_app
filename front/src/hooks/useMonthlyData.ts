@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query'
 
 import { fetchData } from '../biz/fetchData'
 
+const FIVE_MINUTES_IN_MS = 5 * 60 * 1000
 const firstDayOfTheMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1)
 
 function convertDateToApiString(when: Date) {
@@ -20,7 +21,7 @@ export function useMonthlyData(when: Date) {
   return useQuery({
     queryKey,
     queryFn: () => fetchData(apiDate),
-    staleTime: shouldCache ? Infinity : 0,
+    staleTime: shouldCache ? Infinity : FIVE_MINUTES_IN_MS,
     gcTime: Infinity,
   })
 }
