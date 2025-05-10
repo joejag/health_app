@@ -7,20 +7,45 @@ import { useHistoricalData } from '../hooks/useHistoricalData'
 
 Chart.register(CategoryScale)
 
-export const Historical = () => {
-  const [historicalWeights, setHistoricalWeights] = React.useState<any[]>([])
+const everyQuarterSince2019: string[] = [
+  '2025-03-01',
+  '2024-12-01',
+  '2024-09-01',
+  '2024-06-01',
+  '2024-03-01',
+  '2023-12-01',
+  '2023-09-01',
+  '2023-06-01',
+  '2023-03-01',
+  '2022-12-05',
+  '2022-09-05',
+  '2022-06-01',
+  '2022-03-01',
+  '2021-12-01',
+  '2021-09-01',
+  '2021-06-01',
+  '2021-03-01',
+  '2020-12-01',
+  '2020-09-20',
+  '2020-06-01',
+  '2020-03-01',
+  '2019-12-01',
+  '2019-09-01',
+]
 
+export const Historical = () => {
   const [chartData, setChartData] = React.useState<any>()
+  const { data: historicalWeights } = useHistoricalData(everyQuarterSince2019)
 
   React.useEffect(() => {
     const labels = historicalWeights
       .slice()
       .reverse()
-      .map((day) => new Date(day.date).toLocaleString('default', { month: 'short', year: 'numeric' }))
-    const data = historicalWeights
+      .map((day: any) => new Date(day.date).toLocaleString('default', { month: 'short', year: 'numeric' }))
+    const weightTotals = historicalWeights
       .slice()
       .reverse()
-      .map((day) => day.total)
+      .map((day: any) => day.total)
 
     // Add the BMI classification lines
     const bmiNormalUpperLine = Array(labels.length).fill(75.3) // Upper limit of normal weight
@@ -32,7 +57,7 @@ export const Historical = () => {
       datasets: [
         {
           label: 'Weight',
-          data,
+          data: weightTotals,
           backgroundColor: '#095798',
           borderColor: 'black',
           borderWidth: 1,
@@ -64,37 +89,6 @@ export const Historical = () => {
       ],
     })
   }, [historicalWeights])
-
-  const dates = []
-  dates.push('2025-03-01')
-  dates.push('2024-12-01')
-  dates.push('2024-09-01')
-  dates.push('2024-06-01')
-  dates.push('2024-03-01')
-  dates.push('2023-12-01')
-  dates.push('2023-09-01')
-  dates.push('2023-06-01')
-  dates.push('2023-03-01')
-  dates.push('2022-12-05')
-  dates.push('2022-09-05')
-  dates.push('2022-06-01')
-  dates.push('2022-03-01')
-  dates.push('2021-12-01')
-  dates.push('2021-09-01')
-  dates.push('2021-06-01')
-  dates.push('2021-03-01')
-  dates.push('2020-12-01')
-  dates.push('2020-09-20')
-  dates.push('2020-06-01')
-  dates.push('2020-03-01')
-  dates.push('2019-12-01')
-  dates.push('2019-09-01')
-  const { data } = useHistoricalData(dates)
-  React.useEffect(() => {
-    if (data) {
-      setHistoricalWeights(data)
-    }
-  }, [data])
 
   return (
     <>

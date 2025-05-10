@@ -29,8 +29,10 @@ function generateWeeklyDatesUntilNow(START_DATE: Date): string[] {
 }
 
 export const CurrentJourney = () => {
-  const [historicalWeights, setHistoricalWeights] = React.useState<any[]>([])
   const [chartData, setChartData] = React.useState<any>()
+
+  const weeklyDatesArray: string[] = generateWeeklyDatesUntilNow(START_DATE)
+  const { data: historicalWeights } = useHistoricalData(weeklyDatesArray)
 
   React.useEffect(() => {
     const weeklyDatesArray: string[] = generateWeeklyDatesUntilNow(START_DATE)
@@ -41,7 +43,7 @@ export const CurrentJourney = () => {
 
     const data = new Array(labels.length).fill(null)
 
-    historicalWeights.forEach((d) => {
+    historicalWeights.forEach((d: any) => {
       // handle missing data
       const idx = labels.indexOf(new Date(d.date).toLocaleString('default', { day: 'numeric', month: 'short', year: '2-digit' }))
       data[idx] = d.total
@@ -90,14 +92,6 @@ export const CurrentJourney = () => {
     })
   }, [historicalWeights])
 
-  const weeklyDatesArray: string[] = generateWeeklyDatesUntilNow(START_DATE)
-  const { data } = useHistoricalData(weeklyDatesArray)
-  React.useEffect(() => {
-    if (data) {
-      setHistoricalWeights(data)
-    }
-  }, [data])
-
   return (
     <>
       <h2>Current Journey</h2>
@@ -124,7 +118,7 @@ export const CurrentJourney = () => {
           </tr>
         </thead>
         <tbody className="journey">
-          {historicalWeights.map((day) => (
+          {historicalWeights.map((day: any) => (
             <tr key={day.date}>
               <td>{new Date(day.date).toLocaleString('default', { day: 'numeric', month: 'short', year: 'numeric' })}</td>
               <td>{day.total}kg</td>
