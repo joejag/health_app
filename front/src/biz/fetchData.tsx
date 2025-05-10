@@ -22,21 +22,20 @@ export const fetchData = (setItems: Function, when: string) => {
     )
 }
 
-export const fetchHistorical = (setItems: Function, when: string[]) => {
-  let url = PRODUCTION_URL
-  if (window.location.href.indexOf('localhost') > -1) {
-    url = LOCAL_URL
-  }
-  url += '?historical=' + when.join(',')
+export const fetchHistorical = (when: string[]): Promise<any> => {
+  return new Promise((resolve, reject) => {
+    let url = PRODUCTION_URL
+    if (window.location.href.includes('localhost')) {
+      url = LOCAL_URL
+    }
+    url += '?historical=' + when.join(',')
 
-  fetch(url)
-    .then((res) => res.json())
-    .then(
-      (result: any) => {
-        setItems(result)
-      },
-      (error) => {
-        console.log(error)
-      }
-    )
+    fetch(url)
+      .then((res) => {
+        if (!res.ok) throw new Error(res.statusText)
+        return res.json()
+      })
+      .then(resolve)
+      .catch(reject)
+  })
 }

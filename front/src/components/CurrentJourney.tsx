@@ -4,7 +4,7 @@ import React from 'react'
 import { Line } from 'react-chartjs-2'
 
 import { START_DATE } from '../biz/config'
-import { fetchHistorical } from '../biz/fetchData'
+import { useHistoricalData } from '../hooks/useHistoricalData'
 
 Chart.register(CategoryScale)
 
@@ -90,10 +90,13 @@ export const CurrentJourney = () => {
     })
   }, [historicalWeights])
 
+  const weeklyDatesArray: string[] = generateWeeklyDatesUntilNow(START_DATE)
+  const { data } = useHistoricalData(weeklyDatesArray)
   React.useEffect(() => {
-    const weeklyDatesArray: string[] = generateWeeklyDatesUntilNow(START_DATE)
-    fetchHistorical(setHistoricalWeights, weeklyDatesArray.slice())
-  }, [])
+    if (data) {
+      setHistoricalWeights(data)
+    }
+  }, [data])
 
   return (
     <>
