@@ -31,65 +31,67 @@ function generateWeeklyDatesUntilNow(START_DATE: Date): string[] {
 export const CurrentJourney = () => {
   const [chartData, setChartData] = React.useState<any>()
 
-  const weeklyDatesArray: string[] = generateWeeklyDatesUntilNow(START_DATE)
+  const weeklyDatesArray = generateWeeklyDatesUntilNow(START_DATE)
   const { data: historicalWeights } = useHistoricalData(weeklyDatesArray)
 
   React.useEffect(() => {
-    const weeklyDatesArray: string[] = generateWeeklyDatesUntilNow(START_DATE)
+    if (historicalWeights && historicalWeights.length > 0) {
+      const weeklyDatesArray = generateWeeklyDatesUntilNow(START_DATE)
 
-    const labels = weeklyDatesArray.map((day) =>
-      new Date(day).toLocaleString('default', { day: 'numeric', month: 'short', year: '2-digit' })
-    )
+      const labels = weeklyDatesArray.map((day) =>
+        new Date(day).toLocaleString('default', { day: 'numeric', month: 'short', year: '2-digit' })
+      )
 
-    const data = new Array(labels.length).fill(null)
+      const data = new Array(labels.length).fill(null)
 
-    historicalWeights.forEach((d: any) => {
-      // handle missing data
-      const idx = labels.indexOf(new Date(d.date).toLocaleString('default', { day: 'numeric', month: 'short', year: '2-digit' }))
-      data[idx] = d.total
-    })
+      historicalWeights.forEach((d) => {
+        // handle missing data
+        const idx = labels.indexOf(new Date(d.date).toLocaleString('default', { day: 'numeric', month: 'short', year: '2-digit' }))
+        data[idx] = d.total
+      })
 
-    // Add the BMI classification lines
-    const bmiNormalUpperLine = Array(labels.length).fill(75.3) // Upper limit of normal weight
-    const bmiOverweightUpperLine = Array(labels.length).fill(89.8) // Upper limit of overweight
-    const bmiObesityClass1UpperLine = Array(labels.length).fill(104.4) // Upper limit of obesity class 1
+      // Add the BMI classification lines
+      const bmiNormalUpperLine = Array(labels.length).fill(75.3) // Upper limit of normal weight
+      const bmiOverweightUpperLine = Array(labels.length).fill(89.8) // Upper limit of overweight
+      const bmiObesityClass1UpperLine = Array(labels.length).fill(104.4) // Upper limit of obesity class 1
 
-    setChartData({
-      labels,
-      datasets: [
-        {
-          label: 'Weight',
-          data,
-          backgroundColor: '#6f42c1',
-          borderColor: 'black',
-          borderWidth: 1,
-        },
-        {
-          label: 'Normal 64-75',
-          data: bmiNormalUpperLine,
-          borderColor: 'green',
-          borderWidth: 2,
-          borderDash: [5, 5],
-          pointRadius: 0,
-        },
-        {
-          label: 'Overweight 75-90',
-          data: bmiOverweightUpperLine,
-          borderColor: 'orange',
-          borderWidth: 2,
-          borderDash: [5, 5],
-          pointRadius: 0,
-        },
-        {
-          label: 'Obesity 90-104',
-          data: bmiObesityClass1UpperLine,
-          borderColor: 'red',
-          borderWidth: 2,
-          borderDash: [5, 5],
-          pointRadius: 0,
-        },
-      ],
-    })
+      setChartData({
+        labels,
+        datasets: [
+          {
+            label: 'Weight',
+            data,
+            backgroundColor: '#6f42c1',
+            borderColor: 'black',
+            borderWidth: 1,
+          },
+          {
+            label: 'Normal 64-75',
+            data: bmiNormalUpperLine,
+            borderColor: 'green',
+            borderWidth: 2,
+            borderDash: [5, 5],
+            pointRadius: 0,
+          },
+          {
+            label: 'Overweight 75-90',
+            data: bmiOverweightUpperLine,
+            borderColor: 'orange',
+            borderWidth: 2,
+            borderDash: [5, 5],
+            pointRadius: 0,
+          },
+          {
+            label: 'Obesity 90-104',
+            data: bmiObesityClass1UpperLine,
+            borderColor: 'red',
+            borderWidth: 2,
+            borderDash: [5, 5],
+            pointRadius: 0,
+          },
+        ],
+      })
+    }
   }, [historicalWeights])
 
   return (
@@ -109,24 +111,26 @@ export const CurrentJourney = () => {
         </div>
       )}
 
-      <table style={{ width: '100%' }}>
-        <thead>
-          <tr className="journey">
-            <th>When</th>
-            <th>Weight</th>
-            <th>Fat</th>
-          </tr>
-        </thead>
-        <tbody className="journey">
-          {historicalWeights.map((day: any) => (
-            <tr key={day.date}>
-              <td>{new Date(day.date).toLocaleString('default', { day: 'numeric', month: 'short', year: 'numeric' })}</td>
-              <td>{day.total}kg</td>
-              <td>{day.fat}kg</td>
+      {historicalWeights && historicalWeights.length > 0 && (
+        <table style={{ width: '100%' }}>
+          <thead>
+            <tr className="journey">
+              <th>When</th>
+              <th>Weight</th>
+              <th>Fat</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody className="journey">
+            {historicalWeights.map((day) => (
+              <tr key={day.date}>
+                <td>{new Date(day.date).toLocaleString('default', { day: 'numeric', month: 'short', year: 'numeric' })}</td>
+                <td>{day.total}kg</td>
+                <td>{day.fat}kg</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
     </>
   )
 }

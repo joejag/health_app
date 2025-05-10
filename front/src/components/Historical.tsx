@@ -38,56 +38,58 @@ export const Historical = () => {
   const { data: historicalWeights } = useHistoricalData(everyQuarterSince2019)
 
   React.useEffect(() => {
-    const labels = historicalWeights
-      .slice()
-      .reverse()
-      .map((day: any) => new Date(day.date).toLocaleString('default', { month: 'short', year: 'numeric' }))
-    const weightTotals = historicalWeights
-      .slice()
-      .reverse()
-      .map((day: any) => day.total)
+    if (historicalWeights && historicalWeights.length > 0) {
+      const labels = historicalWeights
+        .slice()
+        .reverse()
+        .map((day) => new Date(day.date).toLocaleString('default', { month: 'short', year: 'numeric' }))
+      const weightTotals = historicalWeights
+        .slice()
+        .reverse()
+        .map((day) => day.total)
 
-    // Add the BMI classification lines
-    const bmiNormalUpperLine = Array(labels.length).fill(75.3) // Upper limit of normal weight
-    const bmiOverweightUpperLine = Array(labels.length).fill(89.8) // Upper limit of overweight
-    const bmiObesityClass1UpperLine = Array(labels.length).fill(104.4) // Upper limit of obesity class 1
+      // Add the BMI classification lines
+      const bmiNormalUpperLine = Array(labels.length).fill(75.3) // Upper limit of normal weight
+      const bmiOverweightUpperLine = Array(labels.length).fill(89.8) // Upper limit of overweight
+      const bmiObesityClass1UpperLine = Array(labels.length).fill(104.4) // Upper limit of obesity class 1
 
-    setChartData({
-      labels,
-      datasets: [
-        {
-          label: 'Weight',
-          data: weightTotals,
-          backgroundColor: '#095798',
-          borderColor: 'black',
-          borderWidth: 1,
-        },
-        {
-          label: 'Normal 64-75',
-          data: bmiNormalUpperLine,
-          borderColor: 'green',
-          borderWidth: 2,
-          borderDash: [5, 5],
-          pointRadius: 0,
-        },
-        {
-          label: 'Overweight 75-90',
-          data: bmiOverweightUpperLine,
-          borderColor: 'orange',
-          borderWidth: 2,
-          borderDash: [5, 5],
-          pointRadius: 0,
-        },
-        {
-          label: 'Obesity 90-104',
-          data: bmiObesityClass1UpperLine,
-          borderColor: 'red',
-          borderWidth: 2,
-          borderDash: [5, 5],
-          pointRadius: 0,
-        },
-      ],
-    })
+      setChartData({
+        labels,
+        datasets: [
+          {
+            label: 'Weight',
+            data: weightTotals,
+            backgroundColor: '#095798',
+            borderColor: 'black',
+            borderWidth: 1,
+          },
+          {
+            label: 'Normal 64-75',
+            data: bmiNormalUpperLine,
+            borderColor: 'green',
+            borderWidth: 2,
+            borderDash: [5, 5],
+            pointRadius: 0,
+          },
+          {
+            label: 'Overweight 75-90',
+            data: bmiOverweightUpperLine,
+            borderColor: 'orange',
+            borderWidth: 2,
+            borderDash: [5, 5],
+            pointRadius: 0,
+          },
+          {
+            label: 'Obesity 90-104',
+            data: bmiObesityClass1UpperLine,
+            borderColor: 'red',
+            borderWidth: 2,
+            borderDash: [5, 5],
+            pointRadius: 0,
+          },
+        ],
+      })
+    }
   }, [historicalWeights])
 
   return (

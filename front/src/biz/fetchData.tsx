@@ -22,7 +22,15 @@ export const fetchData = (setItems: Function, when: string) => {
     )
 }
 
-export const fetchHistorical = (when: string[]): Promise<any> => {
+interface HistoricalData {
+  date: string
+  dateTime: string
+  fat: number
+  lean: number
+  total: number
+}
+
+export const fetchHistorical = (when: string[]): Promise<HistoricalData[]> => {
   return new Promise((resolve, reject) => {
     let url = PRODUCTION_URL
     if (window.location.href.includes('localhost')) {
