@@ -85,10 +85,10 @@ function App() {
       {!isLoading && healthResults.length > 0 && (
         <>
           <StepsReport healthResults={healthResults} firstDayOfTheMonth={firstDayOfTheMonth} />
+
           <ProgressSummary healthResults={healthResults} firstDayOfTheMonth={firstDayOfTheMonth} />
           <div className="desktop-layout">
-            <div>
-              <NextBigEvent />
+            <div style={{ minWidth: '250px' }}>
               <MonthSwitcher onChange={setFirstDayOfTheMonth} firstDayOfTheMonth={firstDayOfTheMonth} />
               <CurrentMonth zippedHealthResults={zippedHealthResults} bmr={bmr} dataDate={firstDayOfTheMonth} />
             </div>

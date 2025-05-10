@@ -4,6 +4,7 @@ import React from 'react'
 import { Line } from 'react-chartjs-2'
 
 import { calculateProgress, DecoratedHealthResult } from '../biz/logic'
+import { NextBigEvent } from './NextBigEvent'
 
 Chart.register(CategoryScale)
 
@@ -114,7 +115,7 @@ export const ProgressSummary = ({
 
   return (
     <>
-      <h3 className="justify" style={{ marginTop: '0.2em' }}>
+      <h3 className="justify" style={{ marginTop: '0.2em', marginBottom: 0 }}>
         {showFatChart && (
           <>
             <span>SW:{startWeight}kg</span> <span className="green">{amountLost}kg</span> <span>GW:{desiredWeight}</span>
@@ -128,7 +129,10 @@ export const ProgressSummary = ({
           </>
         )}
       </h3>
-      <Toggle initialValue={true} onChange={setShowFatChart} />
+      <div className="justify" style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <NextBigEvent />
+        <Toggle initialValue={true} onChange={setShowFatChart} />
+      </div>
       {showFatChart && chartData && <Line data={chartData} options={{ spanGaps: true }} />}
       {showWeightChart && weightChartData && <Line data={weightChartData} options={{ spanGaps: true }} />}
     </>
