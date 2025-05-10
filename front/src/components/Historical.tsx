@@ -41,12 +41,8 @@ export const Historical = () => {
     if (historicalWeights && historicalWeights.length > 0) {
       const labels = historicalWeights
         .slice()
-        .reverse()
         .map((day) => new Date(day.date).toLocaleString('default', { month: 'short', year: 'numeric' }))
-      const weightTotals = historicalWeights
-        .slice()
-        .reverse()
-        .map((day) => day.total)
+      const weightTotals = historicalWeights.slice().map((day) => day.total)
 
       // Add the BMI classification lines
       const bmiNormalUpperLine = Array(labels.length).fill(75.3) // Upper limit of normal weight
