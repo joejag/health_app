@@ -1,11 +1,4 @@
 export const MonthSwitcher = ({ onChange, firstDayOfTheMonth }: { onChange: Function; firstDayOfTheMonth: Date }) => {
-  const previousMonth = new Date(firstDayOfTheMonth.getFullYear(), firstDayOfTheMonth.getMonth() - 1, 1).toLocaleString('default', {
-    month: 'short',
-  })
-  const nextMonth = new Date(firstDayOfTheMonth.getFullYear(), firstDayOfTheMonth.getMonth() + 1, 1).toLocaleString('default', {
-    month: 'short',
-  })
-
   const goBackAMonth = () => {
     onChange(new Date(firstDayOfTheMonth.getFullYear(), firstDayOfTheMonth.getMonth() - 1, 1))
   }
@@ -18,15 +11,17 @@ export const MonthSwitcher = ({ onChange, firstDayOfTheMonth }: { onChange: Func
 
   return (
     <div className="navigation-buttons">
-      <button className="nav-button prev" onClick={goBackAMonth}>
-        {previousMonth}
+      <button className="nav-button" onClick={goBackAMonth}>
+        ←
       </button>
-      <strong>{currentMonth}</strong>
+
+      <strong style={{ fontSize: '1.4em' }}>{currentMonth}</strong>
+
       {(new Date(firstDayOfTheMonth.getFullYear(), firstDayOfTheMonth.getMonth() + 1, 1) < new Date() && (
-        <button className="nav-button next" onClick={goForwardAMonth}>
-          {nextMonth}
+        <button className="nav-button" onClick={goForwardAMonth}>
+          →
         </button>
-      )) || <span style={{ minWidth: '71px' }}>&nbsp;</span>}
+      )) || <span style={{ minWidth: '56px', visibility: 'hidden' }}>→</span>}
     </div>
   )
 }
