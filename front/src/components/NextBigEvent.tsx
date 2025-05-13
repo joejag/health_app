@@ -8,11 +8,13 @@ export const NextBigEvent = () => {
   return (
     <>
       <p className="target-date">
+        ⏳
         <em>
           {weeksToNextBigEvent > 0 && <>{weekText}</>}
           {weeksToNextBigEvent > 0 && daysToNextBigEvent > 0 && <> and </>}
           {daysToNextBigEvent > 0 && <>{dayText}</>} until {nextBigEvent}
         </em>
+        &nbsp;&nbsp;📅
       </p>
     </>
   )
