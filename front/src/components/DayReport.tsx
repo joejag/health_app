@@ -87,7 +87,7 @@ const DayReport = ({ result, previous }: { result: DecoratedHealthResult; previo
         style={{
           ...pillStyles.segment,
           ...pillStyles.weight,
-          backgroundColor: result.weightColor,
+          backgroundColor: result.weightColor === 'green' ? 'rgb(0, 152, 121)' : 'rgb(201, 52, 2)',
         }}
       >
         {result.totalWeight}
@@ -98,7 +98,7 @@ const DayReport = ({ result, previous }: { result: DecoratedHealthResult; previo
         <div
           style={{
             ...pillStyles.fat,
-            backgroundColor: result.fatColor,
+            backgroundColor: result.fatColor === 'green' ? 'rgb(0, 152, 121)' : 'rgb(201, 52, 2)',
           }}
         >
           {result.fat}

@@ -55,7 +55,7 @@ export const Historical = () => {
           {
             label: 'Weight',
             data: weightTotals,
-            backgroundColor: '#095798',
+            backgroundColor: '#004298',
             borderColor: 'black',
             borderWidth: 1,
           },

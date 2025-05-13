@@ -61,7 +61,7 @@ export const CurrentJourney = () => {
           {
             label: 'Weight',
             data,
-            backgroundColor: '#6f42c1',
+            backgroundColor: '#004298',
             borderColor: 'black',
             borderWidth: 1,
           },

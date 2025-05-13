@@ -53,7 +53,7 @@ export const ProgressSummary = ({
         {
           label: 'Fat',
           data,
-          backgroundColor: '#009879',
+          backgroundColor: '#a29809',
           borderColor: 'black',
           borderWidth: 1,
         },
@@ -97,7 +97,7 @@ export const ProgressSummary = ({
         {
           label: 'Weight',
           data,
-          backgroundColor: '#009879',
+          backgroundColor: '#004298',
           borderColor: 'black',
           borderWidth: 1,
         },
