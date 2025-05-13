@@ -1,9 +1,9 @@
 export const MonthSwitcher = ({ onChange, firstDayOfTheMonth }: { onChange: Function; firstDayOfTheMonth: Date }) => {
   const previousMonth = new Date(firstDayOfTheMonth.getFullYear(), firstDayOfTheMonth.getMonth() - 1, 1).toLocaleString('default', {
-    month: 'long',
+    month: 'short',
   })
   const nextMonth = new Date(firstDayOfTheMonth.getFullYear(), firstDayOfTheMonth.getMonth() + 1, 1).toLocaleString('default', {
-    month: 'long',
+    month: 'short',
   })
 
   const goBackAMonth = () => {
@@ -26,7 +26,7 @@ export const MonthSwitcher = ({ onChange, firstDayOfTheMonth }: { onChange: Func
         <button className="nav-button next" onClick={goForwardAMonth}>
           {nextMonth}
         </button>
-      )) || <span>&nbsp;</span>}
+      )) || <span style={{ minWidth: '71px' }}>&nbsp;</span>}
     </div>
   )
 }
