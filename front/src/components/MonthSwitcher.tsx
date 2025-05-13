@@ -14,16 +14,19 @@ export const MonthSwitcher = ({ onChange, firstDayOfTheMonth }: { onChange: Func
     onChange(new Date(firstDayOfTheMonth.getFullYear(), firstDayOfTheMonth.getMonth() + 1, 1))
   }
 
+  const currentMonth = firstDayOfTheMonth.toLocaleString('default', { month: 'long' })
+
   return (
     <div className="navigation-buttons">
       <button className="nav-button prev" onClick={goBackAMonth}>
         {previousMonth}
       </button>
-      {new Date(firstDayOfTheMonth.getFullYear(), firstDayOfTheMonth.getMonth() + 1, 1) < new Date() && (
+      <strong>{currentMonth}</strong>
+      {(new Date(firstDayOfTheMonth.getFullYear(), firstDayOfTheMonth.getMonth() + 1, 1) < new Date() && (
         <button className="nav-button next" onClick={goForwardAMonth}>
           {nextMonth}
         </button>
-      )}
+      )) || <span>&nbsp;</span>}
     </div>
   )
 }

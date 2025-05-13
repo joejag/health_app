@@ -10,13 +10,8 @@ export const CurrentMonth = ({
   bmr: number
   dataDate: Date
 }) => {
-  const currentMonth = dataDate.toLocaleString('default', { month: 'long' })
-
   return (
     <>
-      <h2>
-        {currentMonth} - BMR {bmr}
-      </h2>
       {zippedHealthResults.map((result) => (
         <DayReport result={result[0]} previous={result[1]} key={result[0].date} />
       ))}
