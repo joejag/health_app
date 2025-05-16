@@ -29,7 +29,11 @@ export const ProgressSummary = ({
   React.useEffect(() => {
     const labels = Array.from(
       { length: new Date(firstDayOfTheMonth.getFullYear(), firstDayOfTheMonth.getMonth() + 1, 0).getDate() },
-      (_, i) => i + 1
+      (_, i) => {
+        const date = new Date(firstDayOfTheMonth)
+        date.setDate(i + 1)
+        return date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })
+      }
     )
     const data = padDataToCurrentMonth([])
     healthResults
@@ -73,7 +77,11 @@ export const ProgressSummary = ({
   React.useEffect(() => {
     const labels = Array.from(
       { length: new Date(firstDayOfTheMonth.getFullYear(), firstDayOfTheMonth.getMonth() + 1, 0).getDate() },
-      (_, i) => i + 1
+      (_, i) => {
+        const date = new Date(firstDayOfTheMonth)
+        date.setDate(i + 1)
+        return date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })
+      }
     )
     const data = padDataToCurrentMonth([])
     healthResults
