@@ -1,26 +1,43 @@
 import React from 'react'
+import { SpinnerRoundOutlined } from 'spinners-react'
 
 import { daysThisMonth, formatDateToYYYYMMDD } from '../biz/dateRange'
-import { DecoratedHealthResult } from '../biz/logic'
+import { StepResult } from '../biz/fetchData'
+import { useMonthlyStepData } from '../hooks/useMonthlyStepData'
 
 const DAY_NAMES: string[] = ['S', 'M', 'T', 'W', 'T', 'F', 'S']
 
-export const StepsReport = ({
-  healthResults,
-  firstDayOfTheMonth,
-}: {
-  healthResults: DecoratedHealthResult[]
-  firstDayOfTheMonth: Date
-}) => {
-  type MyDictionary = Record<string, DecoratedHealthResult>
+type MyDictionary = Record<string, StepResult>
 
-  const knownDates: MyDictionary = {}
-  healthResults.forEach((hr) => {
-    knownDates[hr.date] = hr
-  })
+export const StepsReport = ({ firstDayOfTheMonth }: { firstDayOfTheMonth: Date }) => {
+  const [knownDates, setKnownDates] = React.useState<MyDictionary>({})
+  const { data, isLoading } = useMonthlyStepData(firstDayOfTheMonth)
+
+  React.useEffect(() => {
+    if (data && data.length > 0) {
+      const knownDates: MyDictionary = {}
+      data.forEach((hr) => {
+        knownDates[hr.date] = hr
+      })
+      setKnownDates(knownDates)
+    }
+  }, [data])
+
   const days = daysThisMonth(firstDayOfTheMonth).map((d) => {
     return { date: d, day: formatDateToYYYYMMDD(d) }
   })
+
+  if (isLoading) {
+    return (
+      <div style={{ display: 'flex' }}>
+        {days.map(({ date, day }) => (
+          <div className="block" key={day}>
+            <SpinnerRoundOutlined />
+          </div>
+        ))}
+      </div>
+    )
+  }
 
   return (
     <div style={{ display: 'flex' }}>
@@ -34,7 +51,7 @@ export const StepsReport = ({
   )
 }
 
-const Block = ({ result, date }: { result: DecoratedHealthResult; date: Date }) => {
+const Block = ({ result, date }: { result: StepResult; date: Date }) => {
   const exerciseColor = result.steps > 10000 ? '#009879' : '#c93402'
 
   return (

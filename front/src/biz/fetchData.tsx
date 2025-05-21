@@ -43,3 +43,23 @@ export const fetchHistorical = (when: string[]): Promise<HistoricalData[]> => {
       .catch(reject)
   })
 }
+
+export interface StepResult {
+  date: string
+  steps: number
+}
+
+export const fetchStepData = async (when: string): Promise<StepResult[]> => {
+  let url = PRODUCTION_URL
+  if (window.location.href.includes('localhost')) {
+    url = LOCAL_URL
+  }
+  url += `?from_date=${when}&steps=only`
+
+  const response = await fetch(url)
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`)
+  }
+  const result = await response.json()
+  return decorate(result).reverse()
+}
