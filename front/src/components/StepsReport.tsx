@@ -53,9 +53,14 @@ export const StepsReport = ({ firstDayOfTheMonth }: { firstDayOfTheMonth: Date }
 
 const Block = ({ result, date }: { result: StepResult; date: Date }) => {
   const exerciseColor = result.steps > 10000 ? '#009879' : '#c93402'
+  const celebrate = result.steps > 20000
+  const celebrateStyle = {
+    borderTop: celebrate ? '3px solid gold' : '',
+    borderBottom: celebrate ? '3px solid gold' : '',
+  }
 
   return (
-    <div className="vertical-container">
+    <div className="vertical-container" style={celebrateStyle}>
       <span className="block" style={{ backgroundColor: exerciseColor, color: 'white', alignContent: 'center' }}>
         {Math.floor(Math.round(result.steps) / 1000)}
       </span>
