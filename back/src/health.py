@@ -33,7 +33,11 @@ def fetch_historical(start_date):
 
 
 def lambda_handler(event, context):
-    if "historical" in event.get("queryStringParameters"):
+    if "steps" in event.get("queryStringParameters"):
+        from_date = event.get("queryStringParameters").get("from_date")
+        client = login_to_fitbit()
+        response = fetch_only_steps(client, datetime.datetime.strptime(from_date, "%Y-%m-%d"))
+    elif "historical" in event.get("queryStringParameters"):
         dates = event["queryStringParameters"]["historical"].split(",")
         unfiltered_response = list(map(fetch_historical, dates))
         response = list(filter(None, unfiltered_response))
@@ -149,6 +153,33 @@ def fetch_steps(client, d_from, d_to):
     for item in exercises["activities-steps"]:
         count.append(item)
     return count
+
+def fetch_only_steps(client, d_from):
+    _, end_day = calendar.monthrange(d_from.year, d_from.month)
+    d_to = datetime.datetime(d_from.year, d_from.month, end_day)
+    if d_to > datetime.datetime.now():
+        d_to = datetime.datetime.now()
+
+    s = fetch_steps(client, d_from, d_to)
+
+    merged = {}
+    for exercise in s:
+        dt = exercise["dateTime"]
+        current = merged.get(dt, {})
+        current["s"] = exercise
+        merged[dt] = current
+
+    result = []
+    for dateTime in merged:
+        day = merged[dateTime]
+        result.append(
+            {
+                "date": dateTime,
+                "steps": int(day["s"]["value"]),
+            }
+        )
+
+    return sorted(result, key=lambda r: r["date"])
 
 
 def fetch(client, d_from):
