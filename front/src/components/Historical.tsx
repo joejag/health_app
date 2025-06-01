@@ -8,6 +8,7 @@ import { useHistoricalData } from '../hooks/useHistoricalData'
 Chart.register(CategoryScale)
 
 const everyQuarterSince2019: string[] = [
+  '2025-06-01',
   '2025-03-01',
   '2024-12-01',
   '2024-09-01',
