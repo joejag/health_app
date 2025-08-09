@@ -1,4 +1,4 @@
-export const FAT_LOSS_GOAL = 3.5 // kgs
+export const FAT_LOSS_GOAL = 2 // kgs
 export const FAT_LOSS_TOTAL_GOAL = 18
 
 export const NEXT_BIG_EVENT = '10k'
