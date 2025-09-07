@@ -7,7 +7,9 @@ import { useHistoricalData } from '../hooks/useHistoricalData'
 
 Chart.register(CategoryScale)
 
-function generateQuarters(startYear = 2019, endYear = 2025): string[] {
+
+
+function generateQuarters(startYear = 2019): string[] {
   const months = [3, 6, 9, 12];
   const dates: string[] = [];
   const exceptions: Record<string, string> = {
@@ -16,8 +18,14 @@ function generateQuarters(startYear = 2019, endYear = 2025): string[] {
     "2022-12": "2022-12-05",
   };
 
+  const now = new Date();
+  const endYear = now.getFullYear();
+  const endMonth = now.getMonth() + 1;
+
   for (let y = startYear; y <= endYear; y++) {
     for (const m of months) {
+      if (y === endYear && m > endMonth) break;
+
       const key = `${y}-${String(m).padStart(2, "0")}`;
       if (exceptions[key]) {
         dates.push(exceptions[key]);
@@ -27,10 +35,10 @@ function generateQuarters(startYear = 2019, endYear = 2025): string[] {
     }
   }
 
-  return dates.reverse();
+  return dates.reverse(); // newest → oldest
 }
 
-const everyQuarterSince2019 = generateQuarters(2019, 2025);
+const everyQuarterSince2019 = generateQuarters();
 
 export const Historical = () => {
   const [chartData, setChartData] = React.useState<any>()
