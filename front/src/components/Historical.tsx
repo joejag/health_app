@@ -7,32 +7,30 @@ import { useHistoricalData } from '../hooks/useHistoricalData'
 
 Chart.register(CategoryScale)
 
-const everyQuarterSince2019: string[] = [
-  '2025-06-01',
-  '2025-03-01',
-  '2024-12-01',
-  '2024-09-01',
-  '2024-06-01',
-  '2024-03-01',
-  '2023-12-01',
-  '2023-09-01',
-  '2023-06-01',
-  '2023-03-01',
-  '2022-12-05',
-  '2022-09-05',
-  '2022-06-01',
-  '2022-03-01',
-  '2021-12-01',
-  '2021-09-01',
-  '2021-06-01',
-  '2021-03-01',
-  '2020-12-01',
-  '2020-09-20',
-  '2020-06-01',
-  '2020-03-01',
-  '2019-12-01',
-  '2019-09-01',
-]
+function generateQuarters(startYear = 2019, endYear = 2025): string[] {
+  const months = [3, 6, 9, 12];
+  const dates: string[] = [];
+  const exceptions: Record<string, string> = {
+    "2020-09": "2020-09-20",
+    "2022-09": "2022-09-05",
+    "2022-12": "2022-12-05",
+  };
+
+  for (let y = startYear; y <= endYear; y++) {
+    for (const m of months) {
+      const key = `${y}-${String(m).padStart(2, "0")}`;
+      if (exceptions[key]) {
+        dates.push(exceptions[key]);
+      } else {
+        dates.push(`${key}-01`);
+      }
+    }
+  }
+
+  return dates.reverse();
+}
+
+const everyQuarterSince2019 = generateQuarters(2019, 2025);
 
 export const Historical = () => {
   const [chartData, setChartData] = React.useState<any>()
